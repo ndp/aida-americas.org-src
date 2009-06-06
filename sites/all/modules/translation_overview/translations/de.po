@@ -1,0 +1,282 @@
+# $Id: de.po,v 1.2 2009/03/27 17:48:41 drewish Exp $
+# German translation of Drupal (general)
+# Copyright 2009 Volker WEgert <drupal@volker-wegert.de>
+# Generated from files:
+# translation_overview.admin.inc,v 1.1 2008/09/11 23:21:07 drewish
+# translation_overview.pages.inc,v 1.8 2008/10/23 01:51:12 drewish
+# translation_overview.module,v 1.7 2008/10/23 01:51:12 drewish
+# translation_overview.info,v 1.4 2008/09/25 20:10:38 drewish
+# translation_overview.install,v 1.2 2008/10/17 23:57:24 drewish
+#, fuzzy
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2009-01-17 18:28+0100\n"
+"PO-Revision-Date: 2009-01-17 18:28+0100\n"
+"Last-Translator: Volker Wegert <drupal@volker-wegert.de>\n"
+"Language-Team: German <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=0; plural=;\n"
+
+#: translation_overview.admin.inc:32
+#: translation_overview.pages.inc:125
+msgid "Language"
+msgstr "Sprache"
+
+#: translation_overview.admin.inc:45
+msgid "Who manages the languages"
+msgstr "Koordinator der Übersetzung"
+
+#: translation_overview.pages.inc:5
+msgid "Translations of %title"
+msgstr "Übersetzungen von %title"
+
+#: translation_overview.pages.inc:43
+msgid "High"
+msgstr "Hoch"
+
+#: translation_overview.pages.inc:44
+#: translation_overview.module:303
+msgid "Normal"
+msgstr "Normal"
+
+#: translation_overview.pages.inc:45
+msgid "Ignore"
+msgstr "ignorieren"
+
+#: translation_overview.pages.inc:81
+msgid "n/a"
+msgstr "n/v"
+
+#: translation_overview.pages.inc:95
+msgid "Submit"
+msgstr "Speichern"
+
+#: translation_overview.pages.inc:111
+msgid "The translation priorities have been saved."
+msgstr "Die Übersetzungsprioritäten wurden gesichert."
+
+#: translation_overview.pages.inc:114
+msgid "There was a problem saving the translation priorities."
+msgstr "Beim Sichern der Übersetzungsprioritäten ist ein Fehler aufgetreten."
+
+#: translation_overview.pages.inc:126
+msgid "Title"
+msgstr "Titel"
+
+#: translation_overview.pages.inc:127
+msgid "Status"
+msgstr "Status"
+
+#: translation_overview.pages.inc:131
+msgid "Priority"
+msgstr "Prioritöt"
+
+#: translation_overview.pages.inc:161
+msgid "Published"
+msgstr "Veröffentlicht"
+
+#: translation_overview.pages.inc:162
+msgid "Not published"
+msgstr "Nicht veröffentlicht"
+
+#: translation_overview.pages.inc:163
+msgid "Promoted"
+msgstr "auf der Startseite"
+
+#: translation_overview.pages.inc:164
+msgid "Not promoted"
+msgstr "nicht auf der Startseite"
+
+#: translation_overview.pages.inc:165
+msgid "Sticky"
+msgstr "am Anfang von Listen"
+
+#: translation_overview.pages.inc:166
+msgid "Not sticky"
+msgstr "nicht am Anfang der Liste"
+
+#: translation_overview.pages.inc:167
+msgid "Up-to-date translation"
+msgstr "Übersetzung ist aktuell"
+
+#: translation_overview.pages.inc:168
+msgid "Outdated translation"
+msgstr "Übersetzung ist veraltet"
+
+#: translation_overview.pages.inc:173
+msgid "type"
+msgstr "Typ"
+
+#: translation_overview.pages.inc:179
+msgid "category"
+msgstr "Kategorie"
+
+#: translation_overview.pages.inc:201
+msgid "Show only items where"
+msgstr "Nur Einträge anzeigen mit"
+
+#: translation_overview.pages.inc:216
+msgid "<em>and</em> where <strong>%a</strong> is <strong>%b</strong>"
+msgstr "<em>und</em> wo <strong>%a</strong> gleich <strong>%b</strong>"
+
+#: translation_overview.pages.inc:219
+msgid "<strong>%a</strong> is <strong>%b</strong>"
+msgstr "<strong>%a</strong> gleich <strong>%b</strong>"
+
+#: translation_overview.pages.inc:233
+msgid "Refine"
+msgstr "Einschränken"
+
+#: translation_overview.pages.inc:233
+msgid "Filter"
+msgstr "Filter"
+
+#: translation_overview.pages.inc:235
+msgid "Undo"
+msgstr "Rückgängig"
+
+#: translation_overview.pages.inc:236
+msgid "Reset"
+msgstr "Zurücksetzen"
+
+#: translation_overview.pages.inc:334
+msgid "There are no translatable node types on this site."
+msgstr "Auf dieser Website gibt es keine übersetzbaren Inhaltstypen."
+
+#: translation_overview.pages.inc:340
+msgid "Type"
+msgstr "Typ"
+
+#: translation_overview.pages.inc:341
+msgid "Created"
+msgstr "Angelegt"
+
+#: translation_overview.pages.inc:411
+msgid "Source language"
+msgstr "Quellsprache"
+
+#: translation_overview.module:14
+msgid "These settings control which roles are allowed to assign the translation priorities for each language. Only roles with the \"manage translation overview priorities\" permission are show."
+msgstr "Legen Sie hier fest, Welche Rollen (und damit welche Benutzer) die Berechtigung besitzen, die Prioritäten zur Übersetzung in die jeweilige Zielsprache festzulegen. Nur Rollen mit der Berechtigung \"Übersetzungs-Prioritäten administrieren\" werden hier angezeigt. "
+
+#: translation_overview.module:22
+msgid "The table uses the following symbols to indicate the translation status: !original Original language, !current Current translation, !outofdate Out-of-date translation, !missing Untranslated."
+msgstr "In der Tabelle werden folgende Symbole zur Anzeige des Übersetzungsstatus verwendet: !original Quellsprache, !current aktuelle Übersetzung, !outofdate veraltete Übersetzung, !missing nicht übersetzt."
+
+#: translation_overview.module:302
+msgid "High priority"
+msgstr "Hohe Priorität"
+
+#: translation_overview.module:304
+msgid "Ignored"
+msgstr "Ignoriert"
+
+#: translation_overview.module:312
+msgid "unpublished"
+msgstr "nicht veröffentlicht"
+
+#: translation_overview.module:316
+msgid "Original"
+msgstr "Original"
+
+#: translation_overview.module:317
+msgid "original"
+msgstr "original"
+
+#: translation_overview.module:320
+msgid "Complete"
+msgstr "Vollständig"
+
+#: translation_overview.module:321
+msgid "completed translation"
+msgstr "vollständig übersetzt"
+
+#: translation_overview.module:324
+msgid "Out-of-date"
+msgstr "Veraltet"
+
+#: translation_overview.module:325
+msgid "out-of-date translation"
+msgstr "veraltete Übersetzung"
+
+#: translation_overview.module:328
+msgid "Untranslated"
+msgstr "Nicht übersetzt"
+
+#: translation_overview.module:329
+msgid "untranslated content"
+msgstr "nicht übersetzter Inhalt"
+
+#: translation_overview.module:333
+msgid "with a note"
+msgstr "mit einer Anmerkung"
+
+#: translation_overview.module:336
+msgid "Click to edit it."
+msgstr "Klicken Sie, um die Übersetzung zu bearbeiten."
+
+#: translation_overview.module:339
+msgid "Click to add it."
+msgstr "Klicken Sie, um die Übersetzung anzulegen."
+
+#: translation_overview.module:342
+msgid "Click to view it."
+msgstr "Klicken Sie, um die Übersetzung anzuzeigen."
+
+#: translation_overview.module:379
+msgid "translation_overview"
+msgstr "translation_overview"
+
+#: translation_overview.module:379
+msgid "Added a column for %langcode to the translation_overview_priority table."
+msgstr "Spalte für %langcode zur Tabelle translation_overview_priority hinzugefügt."
+
+#: translation_overview.module:391
+msgid "Dropped the %langcode column from the translation_overview_priority table."
+msgstr "Spalte %langcode aus Tabelle translation_overview_priority entfernt."
+
+#: translation_overview.module:51
+msgid "manage translation overview priorities"
+msgstr "Übersetzungs-Prioritäten administrieren"
+
+#: translation_overview.module:52
+msgid "view translation overview assigments"
+msgstr "Zuordnungen von Sprachen zu Koordinatoren anzeigen"
+
+#: translation_overview.module:66
+#: translation_overview.info:0
+msgid "Translation overview"
+msgstr "Übersetzungs-Übersicht"
+
+#: translation_overview.module:68
+msgid "View the translation status of the site's content."
+msgstr "Übersetzungs-Status des Inhalts anzeigen"
+
+#: translation_overview.module:74
+msgid "Translator assigments"
+msgstr "Übersetzer-Zuordnungen"
+
+#: translation_overview.module:75
+msgid "View the translations assignments."
+msgstr "Übersetzer-Zuordnungen anzeigen"
+
+#: translation_overview.module:98
+msgid "Settings for the translation overview."
+msgstr "Einstellungen der Übersetzungs-Übersicht"
+
+#: translation_overview.install:28
+msgid "Track the priority in which nodes should be translated into various languages."
+msgstr "Verfolgt die Priorität, mit der Beiträge in unterschiedliche Sprachen übersetzt werden sollen."
+
+#: translation_overview.install:31
+msgid "The identifier for a node or set of node translations."
+msgstr "Der Schlüssel für einen Beitrag oder eine Reihe von Beitragsübersetzungen."
+
+#: translation_overview.info:0
+msgid "Provides an overview of the translation status of the site's content."
+msgstr "Stellt eine Übersicht über den Übersetzungs-Status der Site zur Verfügung."

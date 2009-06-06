@@ -1,0 +1,387 @@
+# Hungarian translation of translation_overview (6.x-2.0-beta3)
+# Copyright (c) 2008 by the Hungarian translation team
+# Generated from files:
+#  translation_overview.admin.inc,v 1.1 2008/09/11 23:21:07 drewish
+#  translation_overview.pages.inc,v 1.7 2008/09/25 20:10:38 drewish
+#  translation_overview.module,v 1.6 2008/10/08 00:46:33 drewish
+#  translation_overview.info,v 1.4 2008/09/25 20:10:38 drewish
+#  translation_overview.install,v 1.1 2008/09/11 23:21:07 drewish
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: translation_overview (6.x-2.0-beta3)\n"
+"POT-Creation-Date: 2008-11-19 09:36-0600\n"
+"PO-Revision-Date: 2008-11-10 09:44-0600\n"
+"Language-Team: Hungarian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: translation_overview.admin.inc:32
+msgid "Language"
+msgstr "Nyelv"
+
+#: translation_overview.pages.inc:121,121
+msgid "Language"
+msgstr "Nyelv"
+
+#: translation_overview.pages.inc:81
+msgid "n/a"
+msgstr "n/a"
+
+#: translation_overview.pages.inc:122
+msgid "Title"
+msgstr "Cím"
+
+#: translation_overview.pages.inc:335,335
+msgid "Title"
+msgstr "Cím"
+
+#: translation_overview.pages.inc:404,404
+msgid "Title"
+msgstr "Cím"
+
+#: translation_overview.pages.inc:123
+msgid "Status"
+msgstr "Állapot"
+
+#: translation_overview.pages.inc:155,155
+msgid "Status"
+msgstr "Állapot"
+
+#: translation_overview.pages.inc:405,405
+msgid "Status"
+msgstr "Állapot"
+
+#: translation_overview.pages.inc:157
+msgid "Published"
+msgstr "Közzétett"
+
+#: translation_overview.pages.inc:158
+msgid "Not published"
+msgstr "Rejtett"
+
+#: translation_overview.pages.inc:336
+msgid "Type"
+msgstr "Típus"
+
+#: translation_overview.pages.inc:406,406
+msgid "Type"
+msgstr "Típus"
+
+#: translation_overview.pages.inc:229
+msgid "Filter"
+msgstr "Szűrő"
+
+#: translation_overview.pages.inc:248,248
+msgid "Filter"
+msgstr "Szűrő"
+
+#: translation_overview.pages.inc:232
+msgid "Reset"
+msgstr "Alaphelyzet"
+
+#: translation_overview.pages.inc:264,264
+msgid "Reset"
+msgstr "Alaphelyzet"
+
+#: translation_overview.pages.inc:337
+msgid "Created"
+msgstr "Létrehozva"
+
+#: translation_overview.pages.inc:408,408
+msgid "Created"
+msgstr "Létrehozva"
+
+#: translation_overview.pages.inc:164
+msgid "Outdated translation"
+msgstr "Elavult fordítás"
+
+#: translation_overview.pages.inc:169
+msgid "type"
+msgstr "típus"
+
+#: translation_overview.pages.inc:175
+msgid "category"
+msgstr "kategória"
+
+#: translation_overview.pages.inc:197
+msgid "Show only items where"
+msgstr "Csak azok mutatása, melyek"
+
+#: translation_overview.pages.inc:212
+msgid "<em>and</em> where <strong>%a</strong> is <strong>%b</strong>"
+msgstr "<em>és</em> <strong>%a</strong> = <strong>%b</strong>"
+
+#: translation_overview.pages.inc:215
+msgid "<strong>%a</strong> is <strong>%b</strong>"
+msgstr "<strong>%a</strong> = <strong>%b</strong>"
+
+#: translation_overview.pages.inc:229
+msgid "Refine"
+msgstr "Finomítás"
+
+#: translation_overview.pages.inc:249,249
+msgid "Refine"
+msgstr "Finomítás"
+
+#: translation_overview.pages.inc:231
+msgid "Undo"
+msgstr "Visszavonás"
+
+#: translation_overview.pages.inc:261,261
+msgid "Undo"
+msgstr "Visszavonás"
+
+#: translation_overview.pages.inc:5
+msgid "Translations of %title"
+msgstr "%title fordításai"
+
+#: translation_overview.pages.inc:43
+msgid "High"
+msgstr "Magas"
+
+#: translation_overview.pages.inc:44
+msgid "Normal"
+msgstr "Normál"
+
+#: translation_overview.module:301,301
+msgid "Normal"
+msgstr "Normál"
+
+#: translation_overview.pages.inc:95
+msgid "Submit"
+msgstr "Beküldés"
+
+#: translation_overview.module:326
+msgid "Untranslated"
+msgstr "Fordítatlan"
+
+#: translation_overview.pages.inc:161
+msgid "Sticky"
+msgstr "Kiemelt"
+
+#: translation_overview.module:314
+msgid "Original"
+msgstr "Eredeti"
+
+#: translation_overview.pages.inc:127
+msgid "Priority"
+msgstr "Prioritás"
+
+#: translation_overview.pages.inc:159
+msgid "Promoted"
+msgstr "Címlapon"
+
+#: translation_overview.pages.inc:160
+msgid "Not promoted"
+msgstr "Nincs a címlapon"
+
+#: translation_overview.pages.inc:162
+msgid "Not sticky"
+msgstr "Nem kiemelt"
+
+#: translation_overview.module:22
+msgid ""
+"The table uses the following symbols to indicate the translation "
+"status: !original Original language, !current Current translation, "
+"!outofdate Out-of-date translation, !missing Untranslated."
+msgstr ""
+"A táblázat az alábbi szimbólumokat használja a fordítási "
+"állapot jelzésére: !original Eredeti nyelv, !current Aktuális "
+"fordítás, !outofdate Elavult fordítás, !missing Fordítatlan."
+
+#: translation_overview.module:318
+msgid "Complete"
+msgstr "Kész"
+
+#: translation_overview.module:322
+msgid "Out-of-date"
+msgstr "Elavult"
+
+#: translation_overview.module:66
+msgid "Translation overview"
+msgstr "Fordítási áttekintő"
+
+#: translation_overview.module:97,97
+msgid "Translation overview"
+msgstr "Fordítási áttekintő"
+
+#: translation_overview.info:0,0
+msgid "Translation overview"
+msgstr "Fordítási áttekintő"
+
+#: translation_overview.module:68
+msgid "View the translation status of the site's content."
+msgstr "A webhely tartalom fordítási állapotának megtekintése."
+
+#: translation_overview.module:377
+msgid "translation_overview"
+msgstr "translation_overview"
+
+#: translation_overview.module:389,389
+msgid "translation_overview"
+msgstr "translation_overview"
+
+#: translation_overview.module:0,0
+msgid "translation_overview"
+msgstr "translation_overview"
+
+#: translation_overview.info:0
+msgid "Provides an overview of the translation status of the site's content."
+msgstr ""
+"Egy áttekintést nyújt a webhely tartalmának fordítási "
+"állapotáról."
+
+#: translation_overview.admin.inc:45
+msgid "Who manages the languages"
+msgstr "Ki kezeli a nyelveket"
+
+#: translation_overview.pages.inc:45
+msgid "Ignore"
+msgstr "Mellőz"
+
+#: translation_overview.pages.inc:107
+msgid "The translation priorities have been saved."
+msgstr "A fordítási prioritások elmentve."
+
+#: translation_overview.pages.inc:110
+msgid "There was a problem saving the translation priorities."
+msgstr "A fordítási prioritások mentésénél probléma volt."
+
+#: translation_overview.pages.inc:163
+msgid "Up-to-date translation"
+msgstr "Aktuális fordítás"
+
+#: translation_overview.pages.inc:330
+msgid "There are no translatable node types on this site."
+msgstr "Nincsenek fordítható tartalom típusok ezen a webhelyen."
+
+#: translation_overview.pages.inc:399,399
+msgid "There are no translatable node types on this site."
+msgstr "Nincsenek fordítható tartalom típusok ezen a webhelyen."
+
+#: translation_overview.pages.inc:407
+msgid "Source language"
+msgstr "Forrás nyelve"
+
+#: translation_overview.module:14
+msgid ""
+"These settings control which roles are allowed to assign the "
+"translation priorities for each language. Only roles with the \"manage "
+"translation overview priorities\" permission are show."
+msgstr ""
+"Ezek a beállítások vezérlik, hogy mely csoportok számára "
+"engedélyezett a fordítási prioritások hozzárendelése egy adott "
+"nyelvhez. Csak a „fordítási áttekintő prioritások kezelése” "
+"jogosultsággal rendelkező csoportok jelennek meg."
+
+#: translation_overview.module:300
+msgid "High priority"
+msgstr "Magas prioritású"
+
+#: translation_overview.module:302
+msgid "Ignored"
+msgstr "Mellőzve"
+
+#: translation_overview.module:310
+msgid "unpublished"
+msgstr "rejtett"
+
+#: translation_overview.module:315
+msgid "original"
+msgstr "eredeti"
+
+#: translation_overview.module:319
+msgid "completed translation"
+msgstr "kész fordítás"
+
+#: translation_overview.module:323
+msgid "out-of-date translation"
+msgstr "elavult fordítás"
+
+#: translation_overview.module:327
+msgid "untranslated content"
+msgstr "fordítatlan tartalom"
+
+#: translation_overview.module:331
+msgid "with a note"
+msgstr "megjegyzéssel"
+
+#: translation_overview.module:334
+msgid "Click to edit it."
+msgstr "Szerkeszt"
+
+#: translation_overview.module:337
+msgid "Click to add it."
+msgstr "Hozzáad"
+
+#: translation_overview.module:340
+msgid "Click to view it."
+msgstr "Megtekint"
+
+#: translation_overview.module:377
+msgid ""
+"Added a column for %langcode to the translation_overview_priority "
+"table."
+msgstr ""
+"%langcode számára a translation_overview_priority táblához hozzá "
+"lett adva egy új oszlop."
+
+#: translation_overview.module:389
+msgid ""
+"Dropped the %langcode column from the translation_overview_priority "
+"table."
+msgstr ""
+"%langcode oszlop törölve lett a translation_overview_priority "
+"táblából."
+
+#: translation_overview.module:51
+msgid "manage translation overview priorities"
+msgstr "fordítási áttekintő prioritások kezelése"
+
+#: translation_overview.module:52
+msgid "view translation overview assigments"
+msgstr "fordítási áttekintő hozzárendelések megtekintése"
+
+#: translation_overview.module:74
+msgid "Translator assigments"
+msgstr "Fordító kijelölések"
+
+#: translation_overview.module:75
+msgid "View the translations assignments."
+msgstr "Fordítási hozzárendelések megtekintése."
+
+#: translation_overview.module:98
+msgid "Settings for the translation overview."
+msgstr "A fordítási áttekintő beállításai."
+
+#: translation_overview.install:28
+msgid ""
+"Track the priority in which nodes should be translated into various "
+"languages."
+msgstr ""
+"A prioritás követése azokban a tartalmakban, melyek lefordíthatók "
+"a különböző nyelvekre."
+
+#: translation_overview.install:63,63
+msgid ""
+"Track the priority in which nodes should be translated into various "
+"languages."
+msgstr ""
+"A prioritás követése azokban a tartalmakban, melyek lefordíthatók "
+"a különböző nyelvekre."
+
+#: translation_overview.install:31
+msgid "The identifier for a node or set of node translations."
+msgstr ""
+"Egy tartalom azonosítója, vagy a tartalom fordításainak "
+"beállítása."
+
+#: translation_overview.install:66,66
+msgid "The identifier for a node or set of node translations."
+msgstr ""
+"Egy tartalom azonosítója, vagy a tartalom fordításainak "
+"beállítása."
+

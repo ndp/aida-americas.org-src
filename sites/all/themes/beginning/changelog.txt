@@ -1,0 +1,40 @@
+// $Id: changelog.txt,v 1.5 2008/10/30 11:23:25 robby Exp $
+// beginning drupal 6.x theme, created by robin / biboo[dot]net / nekodesign[dot]net
+
+
+6.x-1.4:
+add support for ie6
+
+6.x-1.3:
+adds some div tags into node and page .tpl.php, minor changes in all .css files
+
+-----------------------------
+6.x-1.2:
+* change color background style for tr.odd td.menu-disabled / tr.even td.menu-disabled , in admin.css line 69
+* add in admin.css
+body.page-admin .block-region {
+	color: #000000;
+	background-color: #feff1e;
+	border: 3px dashed #ff0b0b;
+}
+* add in style.css
+ul.tips li {
+	padding: 0 0 0 15px!important;
+	/* when select an input format */
+	background: transparent url('images/menu-leaf.gif') no-repeat 1px .38em!important;
+	list-style-type: none;
+}
+* change the place of <div id="content-bottom">	in page.tpl.php
+
+-----------------------------
+6.x-1.1 release :
+* better support for all regions
+* add more comments in css files
+* add class=clear:both for some blocks (required when particular regions are not enabled)
+* add search box feature (implemented in the left sidebar)
+* add new region : regions[footer_top] = Footer top
+* feature request #253081 : move footer message at the bottom of the page layout (below the second primary links menu) + add div id="footer-message"
+
+------------------------------
+6.x-1.0 release :
+* initial release

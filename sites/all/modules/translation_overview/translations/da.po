@@ -1,0 +1,121 @@
+# $Id: da.po,v 1.1 2008/06/13 19:54:00 drewish Exp $
+#
+# Danish translation of Drupal (translation_overview.module)
+# Generated from files:
+#  translation_overview.module,v 1.2 2008/05/21 23:39:49 drewish
+#  translation_overview.info,v 1.2 2008/05/26 23:02:33 drewish
+msgid ""
+msgstr ""
+"Project-Id-Version: translation_overview 6.x-1.x\n"
+"POT-Creation-Date: 2008-06-13 13:49+0200\n"
+"PO-Revision-Date: 2008-06-13 14:05+0200\n"
+"Last-Translator: Frederik 'Freso' S. Olesen <freso.dk@gmail.com>\n"
+"Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: translation_overview.module:15
+msgid "The table uses the following symbols to indicate the translation status: !original Original language, !current Current translation, !outofdate Out-of-date translation, !missing Untranslated."
+msgstr "Tabellen bruger følgende symboler for at angive oversættelsens status: !original Originalsprog, !current Nuværende oversættelse, !outofdate Forældet oversættelse, !missing Ikke oversat."
+
+#: translation_overview.module:99;143
+msgid "Title"
+msgstr "Titel"
+
+#: translation_overview.module:100;144
+msgid "Type"
+msgstr "Type"
+
+#: translation_overview.module:101;147
+msgid "Created"
+msgstr "Oprettet"
+
+#: translation_overview.module:145
+msgid "Status"
+msgstr "Status"
+
+#: translation_overview.module:146
+msgid "Language"
+msgstr "Sprog"
+
+#: translation_overview.module:148
+msgid "Translated"
+msgstr "Oversat"
+
+#: translation_overview.module:177
+msgid "Unpublished"
+msgstr "Skjult"
+
+#: translation_overview.module:177
+msgid "Published"
+msgstr "Offentliggjort"
+
+#: translation_overview.module:239
+msgid "Original"
+msgstr "Original"
+
+#: translation_overview.module:240
+msgid "View original"
+msgstr "Vis original"
+
+#: translation_overview.module:243
+msgid "Complete"
+msgstr "Komplet"
+
+#: translation_overview.module:245
+msgid "Translation is up-to-date, edit it"
+msgstr "Oversættelse er opdateret, rediger den"
+
+#: translation_overview.module:248
+msgid "Translation is up-to-date, view it"
+msgstr "Oversættelse er opdateret, vis den"
+
+#: translation_overview.module:252
+msgid "Out-of-date"
+msgstr "Forældet"
+
+#: translation_overview.module:254
+msgid "Translation is out-of-date, edit it"
+msgstr "Oversættelse er forældet, rediger den"
+
+#: translation_overview.module:257
+msgid "Translation is out-of-date, view it"
+msgstr "Oversættelse er forældet, vis den"
+
+#: translation_overview.module:261
+msgid "Untranslated"
+msgstr "Ikke oversat"
+
+#: translation_overview.module:262
+msgid "Translation does not exist, create it"
+msgstr "Oversættelse findes ikke, opret den"
+
+#: translation_overview.module:25
+msgid "Translation overview"
+msgstr "Oversættelsesoversigt"
+
+#: translation_overview.module:27
+msgid "View the translation status of the site's content."
+msgstr "Vis status for oversættelsen af sidens indhold."
+
+#: translation_overview.module:32
+msgid "All"
+msgstr "Alle"
+
+#: translation_overview.module:33
+msgid "All translations"
+msgstr "Alle oversættelser"
+
+#: translation_overview.module:0
+msgid "translation_overview"
+msgstr "translation_overview"
+
+#: translation_overview.info:0
+msgid "Translation Overview"
+msgstr "Translation Overview"
+
+#: translation_overview.info:0
+msgid "Provides an overview of the translation status of the site's content."
+msgstr "Udbyder en oversigt over status på oversættelsen af sidens indhold."
