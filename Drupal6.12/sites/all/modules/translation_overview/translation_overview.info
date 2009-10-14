@@ -1,0 +1,14 @@
+; $Id: translation_overview.info,v 1.5 2009/04/16 19:12:33 drewish Exp $
+name = Translation overview
+description = Provides an overview of the translation status of the site's content.
+dependencies[] = translation
+core = 6.x
+php = 5.1
+package = Multilanguage
+
+; Information added by drupal.org packaging script on 2009-05-24
+version = "6.x-2.2"
+core = "6.x"
+project = "translation_overview"
+datestamp = "1243183910"
+

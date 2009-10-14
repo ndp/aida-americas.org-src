@@ -1,0 +1,15 @@
+name = Translation Table
+description = UI for quick translation of taxonomies and menus
+core = 6.x
+dependencies[] = locale
+dependencies[] = translation
+dependencies[] = i18n
+dependencies[] = i18nstrings
+package = Multilanguage
+
+; Information added by drupal.org packaging script on 2008-11-25
+version = "6.x-1.0-beta1"
+core = "6.x"
+project = "translation_table"
+datestamp = "1227612328"
+

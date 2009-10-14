@@ -1,0 +1,39 @@
+Current API VERSION: 1.1.0. See API.txt for more information.
+
+ctools 6.x-1.0-beta4
+==================
+#451078: Fix silly typo preventing contexts from getting to views. Again.
+#457376: Text fields need array defaults. This only broke in pgsql.
+Add a hook to allow other modules to cooperate a bit more easily with node page overriding.
+#472222: Prevent modules providing invalid user data from causing warnings in profile content.
+#478438 by nickl: Allow passing items to the data() element.
+#480252 Fix some PHP notices.
+#447064 by nickl: Improve requirements message when css cache directory cannot be created.
+#481928: Needed indexes on delegator handlers and pages tables.
+#484284 by crea: Add a node links content type to print just a node's links.
+#485486 by nrambeck: term view override was not setting breadcrumb like taxonomy/term is supposed to.
+#498000: Allow .info files to create data for plugins.
+Fix a bug in plugins.inc where if two modules create a plugin of the same
+name, they would accidentally share data.
+#512048: by tom_o_t: Path fallback override callback had bad logic.
+
+IMPORTANT:
+Removed the delegator module entirely. There is now a page_manager module in 
+its place, with a vastly improved workflow and user interface. Activating it 
+should automatically update your data to the new module. However, PLEASE 
+PLEASE PLEASE back up your data before using it. Just enough changed to make
+this a bit of a concern.
+
+#514468 by hippich: Fix typos in content.menu.inc related to db_rewrite_sql() use.
+#508292 by rfay: Add user comparison access plugin.
+API version bumped to 1.1.0 to reflect the death of delegator.
+by sdboyer: Bulk Export module created to replace Panels bulk export.
+
+ctools 6.x-1.0-beta3
+==================
+#459716: content.theme.inc missing typo caused PHP error.
+#455732 by dereine: Restore code to pull the title from the blocks table for block types.
+#451928 by josh_k: Allow file uploads in the modal.
+#447920: Ensure there is a context selector for the "terms" argument and context converters so it can be used with Views.
+#458300: Panels not using proper method to override the path for the view.
+Add edit tabs to pages. Up API version to 1.0.1

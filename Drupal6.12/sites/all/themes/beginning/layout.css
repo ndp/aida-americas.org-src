@@ -1,0 +1,87 @@
+/* $Id: layout.css,v 1.5 2008/10/07 20:10:05 robby Exp $ */
+/*  beginning drupal 6.x theme, 
+created by robin / biboo[dot]net / nekodesign[dot]net */
+/*  clear support => currently for span.clear !important! */
+.clear {
+	clear: both;
+	display: block;
+}
+
+span.clear {
+	line-height: 0px;
+	height: 0;
+	visibility: hidden;
+}
+
+/*  styles for all div.region-content */
+#header .region-content, #top-bar .region-content,
+#featured .region-content, #breadcrumb-wrapper .region-content,
+#content-bottom .region-content, #footer .region-content {
+	margin: 0 auto;
+	width: 960px;
+}
+
+#mainOut {
+	background: transparent url(images/main-bg.png) repeat-x 0 0;
+}
+
+#mainIn {
+	width: 960px;
+	margin: 0 auto;
+}
+
+#squeeze {
+	margin: 0 20px;
+}
+
+
+#breadcrumb-wrapper {
+	display: none;
+}
+
+/* float left for all blocks */
+#sidebar-left, #sidebar-right, #content {
+	float: left;
+}
+
+/* 200 px fixed width for all sidebars */
+#sidebar-left, #sidebar-right {
+	width: 200px;
+}
+
+/*  sidebars : if one or two sidebars  */
+body.sidebar-left #sidebar-left, body.two-sidebars #sidebar-left {
+	margin-right: -200px;
+}
+
+body.sidebar-right #sidebar-right, body.two-sidebars #sidebar-right {
+	margin-left: 760px;
+	margin-right: -960px;
+}
+
+/*  content : if two sidebars (left+content+right)  */
+body.two-sidebars #content {
+	width: 560px;
+	margin-left: 200px;
+	margin-right: -760px;
+}
+
+/* content : if sidebarleft (left+content)  */
+body.sidebar-left #content {
+	width: 760px;
+	margin-left: 200px;
+	margin-right: -960px;
+}
+
+/* content : if sidebar right (content+right)  */
+body.sidebar-right #content {
+	width: 760px;
+	margin-right: -760px;
+}
+
+#sidebar-left #searchbox {
+	display: none;
+}
+.block-search h2.title {
+	visibility: hidden;
+}

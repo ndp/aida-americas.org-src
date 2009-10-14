@@ -1,0 +1,250 @@
+<?php
+
+// $Id: translation_table.module,v 1.1 2008/11/25 11:06:19 drifter Exp $
+
+/**
+ * @file
+ * Translation table module
+ *
+ * UI for quick translation of taxonomies and menus. 
+ * The i18n module allows for translation of taxonomy terms and menu items, 
+ * but the process is tedious - you need to look up strings you want to
+ * translate, there is no overview of what's already translated etc.
+ *
+ * This module presents your taxonomy terms or menu items in a table,
+ * and each language has a corresponding column.
+ * Just fill out the translations and click Save.
+ * 
+ * @author Zoltan Varady, 2008
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function translation_table_menu() {
+  $items['admin/build/translate/table'] = array(
+    'title' => 'Translation table',
+    'description' => 'Edit menu and taxonomy strings in a table',
+    'page callback' => 'translation_table_taxonomy_strings',
+    'access arguments' => array('translate interface')
+    );
+
+  $items['admin/build/translate/table/taxonomy'] = array(
+    'title' => 'Taxonomy translator',
+    'description' => 'Edit taxonomy strings in a table',
+    'page callback' => 'translation_table_taxonomy_strings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0,
+    'access arguments' => array('translate interface')
+    );
+
+  $items['admin/build/translate/table/menu'] = array(
+    'title' => 'Menu translator',
+    'description' => 'Edit menu strings in a table',
+    'page callback' => 'translation_table_menu_strings',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+    'access arguments' => array('translate interface')
+    );
+
+  return $items;
+}
+
+
+/**
+ * Fetch menu strings
+ * @return
+ *   rendered translation table
+ */
+function translation_table_menu_strings() {
+  $limit = 20;
+  $header = _tt_get_header();
+  $result = _tt_query_textgroup('menu', $header, $limit);
+  return translation_table_table($result);		
+}
+
+/**
+ * Fetch taxonomy terms (optionally filter by vocabulary)
+ * @return
+ *   rendered translation table
+ */
+function translation_table_taxonomy_strings() {
+  $limit = 20;
+  $header = _tt_get_header();
+  $vid = $_REQUEST['vid'];
+  if ($vid) {
+    $result = _tt_query_vocabulary($vid, $header, $limit);
+  } 
+  else {
+    $result = _tt_query_textgroup('taxonomy', $header, $limit);		
+  }
+
+  $output = drupal_get_form('_tt_filter_form');
+  $output .= translation_table_table($result);
+  return $output;
+}
+
+/**
+ * Header row of translation table
+ * @return
+ *   header row for theme_table
+ */
+function _tt_get_header() {
+  $header = array(array('data' => t('Original'), 'sort' => 'asc', 'field' => 'source'));
+
+  $languages = locale_language_list();
+  foreach ($languages as $lang_code => $lang_name) {
+    $header[] = array('data' => $lang_name);
+  }
+  return $header;
+}
+
+/**
+ * Renders translation table body
+ *
+ * Doesn't use Form API, it would be too heavyweight
+ * for just an array of input fields
+ *
+ * @param $result
+ *   database result of queried location strings
+ * @return
+ *   rendered table
+ */
+function translation_table_table($result) {
+  translation_table_update();
+
+  $header = _tt_get_header();
+
+  while ($source = db_fetch_object($result)) {
+    $rows[] = _tt_language_inputs($source);
+  }
+
+  $params['vid'] = $_REQUEST['vid'];
+
+  $output .= '<form action="#" method="POST">';
+  $output .= theme('table', $header, $rows);
+  $output .= '<input type="submit" value="'. t('Save') .'"/>';
+  $output .= theme('pager', array(), $limit, 0, $params);
+
+  return $output;
+}
+
+
+/**
+ * Updates translations
+ */
+function translation_table_update() {
+  $strings = $_POST['string'];
+  if ($strings) {
+    foreach ($strings as $lid => $translations) {
+      foreach ($translations as $langcode => $translation) {
+        if ($translation) {
+          _tt_insert_or_update($lid, $langcode, $translation);
+        }
+      }
+    }
+
+    $params['vid'] = $_REQUEST['vid'];
+    $params['page'] = $_REQUEST['page'];
+    drupal_set_message(t('Translations saved.'));
+  }
+}
+
+/**
+ * Query translations by textgroup
+ *
+ * @param $type
+ *   menu or taxonomy
+ * @param $header
+ *   table header for sorting
+ * @param $limit
+ *   number of rows to display
+ * @return
+ *   database result
+ */
+function _tt_query_textgroup($type, $header, $limit) {
+  return pager_query("SELECT lid, source 
+    FROM {locales_source}
+WHERE textgroup = '%s'" . tablesort_sql($header),
+  $limit, 0, NULL, $type);
+}
+
+/**
+ * Query translations by vocabulary
+ *
+ * @param $vid
+ *   vocabulary id to filter
+ * @param $header
+ *   table header for sorting
+ * @param $limit
+ *   number of rows to display
+ * @return
+ *   database result
+ */
+function _tt_query_vocabulary($vid, $header, $limit) {
+  return pager_query("SELECT {locales_source}.lid, {locales_source}.source FROM {locales_source}
+    LEFT JOIN {i18n_strings} ON {locales_source}.lid = {i18n_strings}.lid 
+    WHERE type='term' AND objectid IN (SELECT tid FROM {term_data} WHERE vid=%d)" . tablesort_sql($header), $limit, 0, NULL, $vid);
+}
+
+/**
+ * Render a row of language inputs for a term
+ *
+ * string[lid][language_code]
+ *
+ * @param $source
+ *   source string record
+ * @return
+ *   table row for theme_table
+ */
+function _tt_language_inputs($source) {
+  $languages = locale_language_list();
+
+  $row = array(array('data' => $source->source));
+  foreach ($languages as $lang_code => $lang_name) {
+    $translation = db_result(db_query("SELECT translation FROM {locales_target} WHERE lid = %d AND language = '%s'", $source->lid, $lang_code));
+    $row[] = array('data' => 
+      '<input type="text" name="string['. $source->lid .']['. $lang_code .']" value="'. $translation .'" />');
+  }
+  return $row;
+}
+
+/**
+ * Update or create new translation as needed
+ */
+function _tt_insert_or_update($lid, $langcode, $translation) {
+  db_query("UPDATE {locales_target} SET translation = '%s' WHERE lid = %d AND language = '%s'", $translation, $lid, $langcode);
+  if (!db_affected_rows()) {
+    @db_query("INSERT INTO {locales_target} (lid, language, translation) VALUES (%d, '%s', '%s')", $lid, $langcode, $translation);
+  }
+}
+
+/**
+ * Form API form for filtering by vocabulary
+ *
+ * @return
+ *   form
+ */
+function _tt_filter_form($form_state) {
+  $vocab_objects = taxonomy_get_vocabularies();
+  foreach ($vocab_objects as $vid => $vocabulary) {
+    $vocabs[$vid] = $vocabulary->name; 
+  }
+
+  $form['vid']  = array(
+    '#type' => 'select',
+  '#title' => t('Category'),
+  '#options' => $vocabs,
+  );
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Filter'));
+  return $form;
+}
+
+/**
+ * Vocabulary filter form submit handler
+ *
+ * We don't need a redirect since it acts as a filter
+ */
+function _tt_filter_form_submit($form, &$form_state) {
+  $form_state['redirect'] = FALSE;
+}

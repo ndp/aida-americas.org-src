@@ -1,0 +1,72 @@
+/* $Id: layout.css,v 1.4 2009/05/13 12:39:40 robby Exp $ */
+/*  Created for AIDA by www.buttonwillowsix.com", 
+based on Beginning Web 2.0 by gazwal.com */
+/*  clear support => currently for span.clear !important! */
+.clear {
+	clear: both;
+	display: block;
+}
+
+span.clear {
+	line-height: 0px;
+	height: 0;
+	visibility: hidden;
+}
+
+/*  styles for all div.region-content */
+#header .region-content, #top-bar .region-content,
+#featured .region-content, #headerblock .region-content, #breadcrumb-wrapper .region-content,
+#content-bottom .region-content, #footer .region-content {
+	margin: 0 auto;
+	width: 90%;
+	min-width: 960px;
+}
+
+#mainOut {
+	background: transparent url(images/main-bg.png) repeat-x 0 0;
+}
+
+#mainIn {
+	width: 90%;
+	margin: 0 auto;
+	min-width: 960px;
+}
+
+#squeeze {
+	margin: 0 7px;
+}
+
+/* float left for all blocks */
+#sidebar-left, #sidebar-right, #content {
+	float: left;
+}
+
+/*  width  */
+#content {
+	width: 56%;
+}
+
+#sidebar-left {
+	width: 24%;
+}
+
+#sidebar-right {
+	width: 18.75%;
+	margin-left: 10px;
+}
+
+/*  content width : if only sidebar-left */ 
+body.sidebar-left #content {
+	width: 73.75%;
+}
+
+/*  content width : if only sidebar-right */ 
+body.sidebar-right #content {
+	width: 80%;
+}
+
+/*  content width : if no sidebars */ 
+body.no-sidebars #content {
+	width: 100%;
+}
+
