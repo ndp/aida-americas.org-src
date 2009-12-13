@@ -1,2 +1,11 @@
 .DS_Store
 .htaccess
+Drupal6.12
+Drupal6.13
+error_log
+sites/.DS_Store
+sites/aida/.DS_Store
+sites/all/.DS_Store
+sites/all/modules/.DS_Store
+.DS_Store
+

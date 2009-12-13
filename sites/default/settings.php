@@ -89,7 +89,7 @@
  *   $db_url = 'mysqli://username:password@localhost/databasename';
  *   $db_url = 'pgsql://username:password@localhost/databasename';
  */
-$db_url = 'mysql://root@127.0.0.1/aida_drupal';
+$db_url = 'mysql://amerigo:LA0r0ya%263@127.0.0.1/amerigo_drupal';
 $db_prefix = '';
 
 /**
@@ -146,6 +146,9 @@ ini_set('session.use_only_cookies', 1);
 ini_set('session.use_trans_sid',    0);
 ini_set('url_rewriter.tags',        '');
 
+/*BW6 error reporting */
+ini_set('display_errors', 1);
+
 /**
  * Drupal automatically generates a unique session cookie name for each site
  * based on on its full domain name. If you have multiple domains pointing at
@@ -169,10 +172,10 @@ ini_set('url_rewriter.tags',        '');
  *
  * Remove the leading hash signs to enable.
  */
-# $conf = array(
-#   'site_name' => 'My Drupal site',
-#   'theme_default' => 'minnelli',
-#   'anonymous' => 'Visitor',
+$conf = array(
+   'site_name' => 'Aida Americas',
+ #  'theme_default' => 'minnelli',
+ #  'anonymous' => 'Visitor',
 /**
  * A custom theme can be set for the off-line page. This applies when the site
  * is explicitly set to off-line mode through the administration page or when
@@ -181,7 +184,7 @@ ini_set('url_rewriter.tags',        '');
  * theme. It is located inside 'modules/system/maintenance-page.tpl.php'.
  * Note: This setting does not apply to installation and update pages.
  */
-#   'maintenance_theme' => 'minnelli',
+   'maintenance_theme' => 'minnelli',
 /**
  * reverse_proxy accepts a boolean value.
  *
@@ -210,7 +213,7 @@ ini_set('url_rewriter.tags',        '');
  * your web server spoofing the X-Forwarded-For headers.
  */
 #   'reverse_proxy_addresses' => array('a.b.c.d', ...),
-# );
+ );
 
 /**
  * String overrides:

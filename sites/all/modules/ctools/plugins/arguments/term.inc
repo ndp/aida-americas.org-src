@@ -1,5 +1,5 @@
 <?php
-// $Id: term.inc,v 1.6 2009/07/13 17:55:56 merlinofchaos Exp $
+// $Id: term.inc,v 1.6.2.2 2009/10/01 22:39:02 merlinofchaos Exp $
 
 /**
  * @file
@@ -11,8 +11,8 @@
  * Implementation of specially named hook_ctools_arguments().
  */
 function ctools_term_ctools_arguments() {
-  $args['term'] = array(
-    'title' => t("Taxonomy term"),
+  return array(
+    'title' => t("Taxonomy term: ID"),
     // keyword to use for %substitution
     'keyword' => 'term',
     'description' => t('Creates a single taxonomy term from a taxonomy ID or taxonomy term name.'),
@@ -22,7 +22,6 @@ function ctools_term_ctools_arguments() {
     'placeholder form' => 'ctools_term_ctools_argument_placeholder',
     'breadcrumb' => 'ctools_term_breadcrumb',
   );
-  return $args;
 }
 
 /**
@@ -128,7 +127,7 @@ function ctools_term_breadcrumb($conf, $context) {
     $current = array_shift($parents);
     $breadcrumb[] = l($current->name, 'taxonomy/term/' . $current->tid);
   }
-  
+
   $breadcrumb = array_merge(drupal_get_breadcrumb(), array_reverse($breadcrumb));
   drupal_set_breadcrumb($breadcrumb);
 }

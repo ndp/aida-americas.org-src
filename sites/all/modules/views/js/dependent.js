@@ -1,4 +1,4 @@
-// $Id: dependent.js,v 1.7 2009/04/07 23:10:00 merlinofchaos Exp $
+// $Id: dependent.js,v 1.9 2009/09/15 17:32:20 merlinofchaos Exp $
 /**
  * @file dependent.js
  *
@@ -28,11 +28,11 @@ Drupal.Views.dependent = { bindings: {}, activeBindings: {}, activeTriggers: [] 
 Drupal.Views.dependent.inArray = function(array, search_term) {
   var i = array.length;
   if (i > 0) {
-	 do {
-		if (array[i] == search_term) {
-		   return true;
-		}
-	 } while (i--);
+   do {
+    if (array[i] == search_term) {
+       return true;
+    }
+   } while (i--);
   }
   return false;
 }
@@ -81,6 +81,9 @@ Drupal.Views.dependent.autoAttach = function() {
 
       Drupal.Views.dependent.activeTriggers.push(trigger_id);
 
+      if (jQuery(trigger_id).attr('type') == 'checkbox') {
+        $(trigger_id).parent().addClass('hidden-options');
+      }
 
       var getValue = function(item, trigger) {
         if (item.substring(0, 6) == 'radio:') {
@@ -90,6 +93,14 @@ Drupal.Views.dependent.autoAttach = function() {
           switch (jQuery(trigger).attr('type')) {
             case 'checkbox':
               var val = jQuery(trigger).attr('checked') || 0;
+              
+              if (val) {
+                $(trigger).parent().removeClass('hidden-options').addClass('expanded-options');
+              }
+              else {
+                $(trigger).parent().removeClass('expanded-options').addClass('hidden-options');
+              }
+              
               break;
             default:
               var val = jQuery(trigger).val();
@@ -105,7 +116,7 @@ Drupal.Views.dependent.autoAttach = function() {
 
           for (i in Drupal.Views.dependent.bindings[bind_id]) {
             var id = Drupal.Views.dependent.bindings[bind_id][i];
-            
+
             // Fix numerous errors
             if (typeof id != 'string') {
               continue;
@@ -137,6 +148,7 @@ Drupal.Views.dependent.autoAttach = function() {
             if (Drupal.settings.viewsAjax.formRelationships[id].num <= len) {
               // Show if the element if criteria is matched
               object.show(0);
+              object.addClass('dependent-options');
             }
             else {
               // Otherwise hide

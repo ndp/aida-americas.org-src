@@ -1,5 +1,5 @@
 <?php
-// $Id: nid.inc,v 1.8 2009/04/22 22:31:29 merlinofchaos Exp $
+// $Id: nid.inc,v 1.8.2.2 2009/10/01 22:39:02 merlinofchaos Exp $
 
 /**
  * @file
@@ -11,8 +11,8 @@
  * Implementation of specially named hook_ctools_arguments().
  */
 function ctools_nid_ctools_arguments() {
-  $args['nid'] = array(
-    'title' => t("Node ID"),
+  return array(
+    'title' => t("Node: ID"),
     'keyword' => 'node',
     'description' => t('Creates a node context from a node ID argument.'),
     'context' => 'ctools_argument_nid_context',
@@ -21,7 +21,6 @@ function ctools_nid_ctools_arguments() {
       '#description' => t('Enter the node ID of a node for this argument'),
     ),
   );
-  return $args;
 }
 
 /**

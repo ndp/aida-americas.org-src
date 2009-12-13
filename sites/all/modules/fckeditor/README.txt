@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.16.2.14 2008/12/12 19:45:25 wwalc Exp $
+$Id: README.txt,v 1.16.2.17 2009/08/02 20:00:56 jorrit Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -94,7 +94,10 @@ following files:
    - fckeditor.js
    - fckconfig.js
    - fckstyles.xml
-   - fcktemplates.xml 
+   - fcktemplates.xml
+   - fckeditor.php
+   - fckeditor_php4.php
+   - fckeditor_php5.php
 and a directory named editor.
 
 The correct directory structure is as follows:
@@ -145,7 +148,6 @@ You can enable any (or even both) of them.
 Uploading images and files
 --------------------------
 
-
 There are three ways of uploading files: By using the built-in file browser, 
 by using modules like IMCE, Image Browser or by using the core upload module.
 
@@ -191,7 +193,7 @@ directory on the server and add new content to that directory
       
    2. As of Drupal 5.2, additional step is required: locate file named 
       settings.php inside your drupal directory (usually sites/default/settings.php) 
-      and set $cookie_domain variable to the appropiate domain 
+      and set $cookie_domain variable to the appropriate domain 
       (remember to uncomment that line). If you not do this, FCKeditor will 
       claim that file browser is disabled
       
@@ -206,6 +208,7 @@ Modules: Image Assist
 ---------------------
 Image Assist can be integrated with FCKeditor. 
 To do this, simply copy the modules/fckeditor/img_assist_fckeditor.js file to modules/img_assist/img_assist_fckeditor.js.
+Note: this version of the FCKeditor module only supports the 1.x versions of the Image Assist module.
 
 Modules: Link to content (EXPERIMENTAL)
 ---------------------------------------

@@ -1,0 +1,118 @@
+/* $Id: header.css,v 1.1 $ */
+/*  Created for AIDA by 
+Buttonwillow Six
+www.buttonwillowsix.com 
+based on Beginning  
+by gazwal.com */
+
+/*
+Reference:
+AIDA Blue: #003163
+AIDA Green:#006363
+AIDA Orange:#ce3100
+AIDA Light Green (maybe) #6DCE91
+
+*/
+#header-region {
+	/*margin: .7em;*/
+	width: 1000px;/*BW6 to constrain overall header size and keep header blocks in line*/
+}
+
+/*  secondary links => div#top-bar 
+****************************************************/
+#top-bar {
+	/*BW6 changed as per design */
+	/*border-bottom: 1px solid #bdbdbd;*/
+	/*background: #d7d5f2;*/
+	height: 0px;
+}
+
+#top-bar ul.secondary-links {
+	float: right;
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	height: 2px;/*was 22px*/
+}
+
+#top-bar ul.secondary-links li {
+	float: left;
+}
+
+#top-bar ul.secondary-links li a, #top-bar ul.secondary-links li a:link,
+#top-bar ul.secondary-links li a:visited {
+	float: left;
+	display: block;
+	color: #454545;
+}
+
+/*     header
+****************************************/
+#header {
+	background-color: #fff;
+	height: 145px; /* BW6 Using AIDA logo small, which is 145px  */
+/*	padding-bottom: 20px;BW6 Should Keep Menu from Creeping Up Over Logo if Menu in featured! */
+}
+
+#header h1 {
+	padding-top: 9px;
+	line-height: 1.6em;
+	position: absolute;
+}
+
+/*  if site name is displayed  */
+#header h1 span.site-name {
+	font-size: 1.3em;
+}
+
+/*  if site slogan is displayed  */
+#header h1 span.site-slogan {
+	font-style: italic;
+	font-size: .9em;
+}
+
+/*Experimental place to put Nice Menu in header block. Might want to go back to FEatured section*/
+#block-nice_menus-2 {
+float: right;
+	
+}
+
+/*  primary links => div#top-primary  
+**************************************************/
+#top-primary ul.primary-links {
+	float: right;
+	margin-top: 35px; /* define your own position from the top, also depends on #header height */
+	margin-right: 10px; /* squeezes it in a little */
+	margin-left: 600px; /*keeps these links from sliding under the logo */
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+}
+
+#top-primary ul.primary-links li {
+	float: left;
+}
+
+#top-primary ul.primary-links li a, #top-primary ul.primary-links li a:link,
+#top-primary ul.primary-links li a:visited {
+/*	float: left;*/
+/*	display: block;*/
+	font-size: 1.3em;
+	letter-spacing: 0.05em;
+	line-height: 35px;
+	height: 34px;
+}
+
+/* BW6 to create a styling bar between two primary links */
+#top-primary ul.primary-links li:first-child {
+	border-right: 2px solid #003163;
+}
+
+/* BW6 possible? 
+Search Block (to float next to primary links) 
+**************************************************/
+#search-block-form {
+	float:right;
+	display: inline;
+	margin-left: 15px;
+}

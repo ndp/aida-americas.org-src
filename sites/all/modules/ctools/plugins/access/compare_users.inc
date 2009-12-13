@@ -1,5 +1,5 @@
 <?php
-// $Id: compare_users.inc,v 1.3 2009/07/17 20:57:26 merlinofchaos Exp $
+// $Id: compare_users.inc,v 1.3.2.1 2009/10/01 22:00:08 merlinofchaos Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * Implement specially named hook_ctools_access().
  */
 function ctools_compare_users_ctools_access() {
-  $args['compare_users'] = array(
+  return array(
     'title' => t("User: compare"),
     'description' => t('Compare two users (logged-in user and user being viewed, for example)'),
     'callback' => 'ctools_compare_users_access_check',
@@ -24,8 +24,6 @@ function ctools_compare_users_ctools_access() {
       new ctools_context_required(t("Second User"), 'user')
     ),
   );
-
-  return $args;
 }
 
 /**

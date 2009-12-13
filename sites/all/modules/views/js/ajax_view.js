@@ -1,4 +1,4 @@
-// $Id: ajax_view.js,v 1.17 2009/03/25 00:11:25 merlinofchaos Exp $
+// $Id: ajax_view.js,v 1.19 2009/07/26 15:07:25 merlinofchaos Exp $
 
 /**
  * @file ajaxView.js
@@ -73,7 +73,7 @@ Drupal.behaviors.ViewsAjaxView = function() {
       })
       .addClass('views-processed')
       .submit(function () {
-        $('input[type=submit]', this).after('<span class="views-throbbing">&nbsp</span>');
+        $('input[type=submit], button', this).after('<span class="views-throbbing">&nbsp</span>');
         var object = this;
         $(this).ajaxSubmit({
           url: ajax_path,
@@ -107,8 +107,8 @@ Drupal.behaviors.ViewsAjaxView = function() {
           var target = this;
           $(this)
             .addClass('views-processed')
-            // Process pager, tablesort, and summary links.
-            .find('ul.pager > li > a, th.views-field a, .views-summary a')
+            // Process pager, tablesort, and attachment summary links.
+            .find('ul.pager > li > a, th.views-field a, .attachment .views-summary a')
             .each(function () {
               var viewData = {};
               // Construct an object using the settings defaults and then overriding

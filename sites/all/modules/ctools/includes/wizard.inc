@@ -1,5 +1,5 @@
 <?php
-// $Id: wizard.inc,v 1.11 2009/08/19 23:21:55 merlinofchaos Exp $
+// $Id: wizard.inc,v 1.12 2009/09/08 21:44:52 merlinofchaos Exp $
 
 /**
  * @file
@@ -342,6 +342,9 @@ function ctools_wizard_submit(&$form, &$form_state) {
       }
       else if (isset($form_state['form_info']['return path'])) {
         $form_state['redirect'] = $form_state['form_info']['return path'];
+      }
+      else if ($type == 'finish' && isset($form_state['form_info']['cancel path'])) {
+        $form_state['redirect'] = $form_state['form_info']['cancel path'];
       }
     }
   }

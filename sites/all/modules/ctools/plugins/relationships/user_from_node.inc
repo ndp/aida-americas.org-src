@@ -1,5 +1,5 @@
 <?php
-// $Id: user_from_node.inc,v 1.3 2009/07/20 16:01:20 merlinofchaos Exp $
+// $Id: user_from_node.inc,v 1.3.2.1 2009/10/01 22:00:09 merlinofchaos Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * Implementation of specially named hook_ctools_relationships().
  */
 function ctools_user_from_node_ctools_relationships() {
-  $args['user_from_node'] = array(
+  return array(
     'title' => t('Node author'),
     'keyword' => 'user',
     'description' => t('Creates the author of a node as a user context.'),

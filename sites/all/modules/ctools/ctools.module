@@ -1,5 +1,5 @@
 <?php
-// $Id: ctools.module,v 1.26 2009/08/17 21:35:20 merlinofchaos Exp $
+// $Id: ctools.module,v 1.27.2.3 2009/10/21 21:25:39 merlinofchaos Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * must be implemented in the module file.
  */
 
-define('CTOOLS_API_VERSION', '1.1.1');
+define('CTOOLS_API_VERSION', '1.2');
 
 /**
  * Test the CTools API version.
@@ -113,6 +113,56 @@ function ctools_add_js($file) {
  */
 function ctools_init() {
   ctools_add_css('ctools');
+}
+
+/**
+ * Central static variable storage. Modeled after Drupal 7's drupal_static().
+ *
+ * @param $name
+ *   Globally unique name for the variable. For a function with only one static,
+ *   variable, the function name (e.g. via the PHP magic __FUNCTION__ constant)
+ *   is recommended. For a function with multiple static variables add a
+ *   distinguishing suffix to the function name for each one.
+ * @param $default_value
+ *   Optional default value.
+ * @return $reset
+ *   TRUE to reset a specific named variable, or all variables if $name is NULL.
+ *   Resetting every variable should only be used, for example, for running unit
+ *   tests with a clean environment. Should be used only though via function
+ *   ctools_static_reset().
+ */
+function &ctools_static($name, $default_value = NULL, $reset = FALSE) {
+  static $data = array();
+
+  // Reset a single value, or all values.
+  if ($reset) {
+    if (isset($name)) {
+      unset($data[$name]);
+    }
+    else {
+      $data = array();
+    }
+    // We must return a reference to a variable.
+    $dummy = NULL;
+    return $dummy;
+  }
+
+  if (!isset($data[$name])) {
+    $data[$name] = $default_value;
+  }
+
+  return $data[$name];
+}
+
+/**
+ * Reset one or all centrally stored static variable(s).
+ * Modeled after Drupal 7's drupal_static_reset().
+ *
+ * @param $name
+ *   Name of the static variable to reset. Omit to reset all variables.
+ */
+function ctools_static_reset($name) {
+  ctools_static($name, NULL, TRUE);
 }
 
 /**
@@ -384,8 +434,8 @@ function ctools_preprocess_page(&$variables) {
           }
           break;
       }
-      $variables['content'] = strtr($variables['content'], $tokens);
     }
+    $variables['content'] = strtr($variables['content'], $tokens);
   }
 }
 
@@ -416,4 +466,43 @@ function ctools_set_page_token($token = NULL, $type = NULL, $argument = NULL) {
   }
 
   return $tokens;
+}
+
+/**
+ * Easily set a token from the page variables.
+ *
+ * This function can be used like this:
+ * $token = ctools_set_variable_token('tabs');
+ *
+ * $token will then be a simple replacement for the 'tabs' about of the
+ * variables available in the page template.
+ */
+function ctools_set_variable_token($token) {
+  $string = '<!-- ctools-page-' . $token . ' -->';
+  ctools_set_page_token($string, 'variable', $token);
+  return $string;
+}
+
+/**
+ * Easily set a token from the page variables.
+ *
+ * This function can be used like this:
+ * $token = ctools_set_variable_token('id', 'mymodule_myfunction');
+ */
+function ctools_set_callback_token($token, $callback) {
+  $string = '<!-- ctools-page-' . $token . ' -->';
+  ctools_set_page_token($string, 'callback', $callback);
+  return $string;
+}
+
+/**
+ * Provide a search form with a different id so that form_alters will miss it
+ * and thus not get advanced search settings.
+ */
+function ctools_forms() {
+  $forms['ctools_search_form']= array(
+    'callback' => 'search_form',
+  );
+
+  return $forms;
 }

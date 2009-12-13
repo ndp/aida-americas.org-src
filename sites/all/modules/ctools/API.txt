@@ -1,6 +1,17 @@
-API.txt: $Id: API.txt,v 1.5 2009/08/17 21:35:20 merlinofchaos Exp $
+API.txt: $Id: API.txt,v 1.5.2.6 2009/10/21 21:25:39 merlinofchaos Exp $
 
 This file contains a log of changes to the API.
+
+API version 1.2:
+  Introduce ctools_set_variable_token().
+  Introduce ctools_set_callback_token().
+  Introduce cleanstring tool. See cleanstring.inc
+  Introduce page_manager_get_current_page().
+  Introduce ctools_ajax_command_redirect().
+  Introduce ctools_ajax_command_reload().
+  Introduce ctools_ajax_command_submit().
+  Introduce ctools_static().
+  Introduce ctools_modal_command_loading().
 
 API version 1.1.1:
   Introduce ctools_plugin_get_class() and ctools_plugin_load_class()

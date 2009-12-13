@@ -1,5 +1,5 @@
 <?php
-// $Id: role.inc,v 1.7 2009/07/10 17:06:10 merlinofchaos Exp $
+// $Id: role.inc,v 1.7.2.1 2009/10/01 22:00:08 merlinofchaos Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * Implementation of specially named hook_ctools_access().
  */
 function ctools_role_ctools_access() {
-  $args['role'] = array(
+  return array(
     'title' => t("User: role"),
     'description' => t('Control access by role.'),
     'callback' => 'ctools_role_ctools_access_check',
@@ -20,8 +20,6 @@ function ctools_role_ctools_access() {
     'summary' => 'ctools_role_ctools_acesss_summary',
     'required context' => new ctools_context_required(t('User'), 'user'),
   );
-
-  return $args;
 }
 
 /**

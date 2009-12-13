@@ -43,12 +43,10 @@ $sCommand = 'QuickUpload' ;
 // The file type (from the QueryString, by default 'File').
 $sType = isset( $_GET['Type'] ) ? $_GET['Type'] : 'File' ;
 
-$sCurrentFolder	= GetCurrentFolder() ;
+$sCurrentFolder	= "/" ;
 
 // Is enabled the upload?
 if ( ! IsAllowedCommand( $sCommand ) )
-
-
 	SendUploadResults( '1', '', '', 'The ""' . $sCommand . '"" command isn\'t allowed' ) ;
 
 // Check if it is an allowed type.

@@ -1,0 +1,43 @@
+/* $Id: brilliant_gallery.css,v 1.2 2008/01/02 09:49:17 tjfulopp Exp $ */
+/*
+ul.brilliant_gallery {
+*/
+	/* 
+	Total 'width' controls the number of thumbnails in each row. 
+	The number, in pixels, should be calculated thusly:
+	[maximum width desired for thumbnails] + [padding - if any, x 2] + [margin - if any, x 2] + [border - if any, x 2] x [number of thumbnails desired in each row]
+	*/
+ /*
+	width: 174px;
+ */
+/*
+	}
+*/
+/*	
+ul.brilliant_gallery li {
+	float: left;
+	list-style: none;
+	background: #000;
+	width: 44px;
+	height: 33px;
+	padding: 4px;
+	text-align: center;
+	margin: 0;
+	border: none;
+	}
+*/
+	
+ul.brilliant_gallery img, ul.brilliant_gallery li a {
+	border: none;
+	}
+/*
+.brilliant_gallery {
+text-decoration: line-through
+}
+*/
+/*
+<ul class="brilliant_gallery">
+<li><a href="http://www.vacilando.eu/sites/vacilando.eu/files/albums/2007_Tomas/Ali.al-fulopp_i_DSC05951.JPG" rel="lightbox[1563447]" title="Ali al-fulopp i DSC05951"><img src="http://www.vacilando.eu/sites/all/modules/brilliant_gallery/image.php?imgp=L3Zhci93d3cvdmhvc3RzL3ZhY2lsYW5kby5ldS9odHRwZG9jcy9zaXRlcy92YWNpbGFuZG8uZXUvZmlsZXMvYWxidW1zLzIwMDdfVG9tYXMvQWxpLmFsLWZ1bG9wcF9pX0RTQzA1OTUxLkpQRw==&amp;imgw=44&amp;imgh=33" /></a></li>
+...
+</ul>
+*/

@@ -1,5 +1,5 @@
 <?php
-// $Id: page_manager.admin.inc,v 1.27 2009/08/19 22:30:00 merlinofchaos Exp $
+// $Id: page_manager.admin.inc,v 1.27.2.4 2009/10/15 18:37:54 merlinofchaos Exp $
 
 /**
  * @file
@@ -18,18 +18,32 @@ function page_manager_list_page($js = NULL) {
     return drupal_not_found();
   }
 
-  if (module_exists('advanced_help')) {
+  // TRUE if 'ajax', FALSE if otherwise.
+  $js = $js == 'ajax';
+
+  if (module_exists('advanced_help') && !$js) {
     drupal_set_message(theme('advanced_help_topic', 'page_manager', 'getting-started', t('See the getting started guide for more information.')));
   }
 
-  // TRUE if 'ajax', FALSE if otherwise.
-
-  $js = $js == 'ajax';
-
   $tasks = page_manager_get_tasks_by_type('page');
-  $pages = array('operations' => array());
+  $pages = array('operations' => array(), 'tasks' => array());
 
   page_manager_get_pages($tasks, $pages);
+
+  // Add lock icon to all locked tasks.
+  global $user;
+  ctools_include('object-cache');
+  $locks = ctools_object_cache_test_objects('page_manager_page', $pages['tasks']);
+  foreach ($locks as $task_name => $lock) {
+    if ($lock->uid == $user->uid) {
+      $pages['rows'][$task_name]['class'] .= ' page-manager-locked';
+      $pages['rows'][$task_name]['title'] = t('This page is currently locked for editing by you. Nobody else may edit this page until these changes are saved or canceled.');
+    }
+    else {
+      $pages['rows'][$task_name]['class'] .= ' page-manager-locked-other';
+      $pages['rows'][$task_name]['title'] = t('This page is currently locked for editing by another user. You may not edit this page without breaking the lock.');
+    }
+  }
 
   $input = $_POST;
 
@@ -195,6 +209,7 @@ function page_manager_get_pages($tasks, &$pages, $task_id = NULL) {
     $row['data']['operations'] = array('data' => theme('links', $operations), 'class' => 'page-manager-page-operations');
 
     $pages['disabled'][$task_name] = !empty($task['disabled']);
+    $pages['tasks'][] = $task_name;
     $pages['rows'][$task_name] = $row;
   }
 }
@@ -1358,9 +1373,8 @@ function page_manager_handler_import(&$form, &$form_state) {
  * Make sure that an import actually provides a handler.
  */
 function page_manager_handler_import_validate($form, &$form_state) {
-  $export = page_manager_export_task_handler($form_state['values']['object']);
   ob_start();
-  eval($export);
+  eval($form_state['values']['object']);
   ob_end_clean();
 
   if (empty($handler)) {
@@ -1379,14 +1393,14 @@ function page_manager_handler_import_validate($form, &$form_state) {
  * Clone an existing task handler into a new handler.
  */
 function page_manager_handler_import_submit($form, &$form_state) {
-  $export = page_manager_export_task_handler($form_state['handler']);
+  $handler = $form_state['handler'];
 
   page_manager_handler_add_to_page($form_state['page'], $handler, $form_state['values']['title']);
 
   $plugin = page_manager_get_task_handler($handler->handler);
   // It has no forms at all. Add the variant and go to its first operation.
   $keys = array_keys($plugin['operations']);
-  $form_state['new trail'] = array('handlers', $name, reset($keys));
+  $form_state['new trail'] = array('handlers', $handler->name, reset($keys));
 }
 
 /**
@@ -1537,7 +1551,7 @@ function page_manager_handler_enable_submit(&$form, &$form_state) {
   $form_state['handler']->disabled = FALSE;
   $form_state['page']->handler_info[$form_state['handler_id']]['disabled'] = FALSE;
   $form_state['page']->handler_info[$form_state['handler_id']]['changed'] |= PAGE_MANAGER_CHANGED_STATUS;
-  $form_state['new trail'] = array('handlers', $form_state['handler_id'], 'disable');
+  $form_state['new trail'] = array('handlers', $form_state['handler_id'], 'actions', 'disable');
 }
 
 /**
@@ -1569,7 +1583,7 @@ function page_manager_handler_disable_submit(&$form, &$form_state) {
   $form_state['handler']->disabled = TRUE;
   $form_state['page']->handler_info[$form_state['handler_id']]['disabled'] = TRUE;
   $form_state['page']->handler_info[$form_state['handler_id']]['changed'] |= PAGE_MANAGER_CHANGED_STATUS;
-  $form_state['new trail'] = array('handlers', $form_state['handler_id'], 'enable');
+  $form_state['new trail'] = array('handlers', $form_state['handler_id'], 'actions', 'enable');
 }
 
 /**

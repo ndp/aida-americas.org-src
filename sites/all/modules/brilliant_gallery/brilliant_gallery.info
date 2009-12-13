@@ -1,0 +1,13 @@
+; $Id: brilliant_gallery.info,v 1.6.2.2.4.2 2009/01/15 21:59:11 tjfulopp Exp $
+name = Brilliant Gallery
+description = Highly customizable Drupal module producing multiple table galleries of quality-scaled images from either a pre-defined local folder, or from any public Picasa gallery.
+dependencies[] = lightbox2
+;dependencies[] = colorpicker
+package = Media
+core = 6.x
+; Information added by drupal.org packaging script on 2009-07-03
+version = "6.x-3.4"
+core = "6.x"
+project = "brilliant_gallery"
+datestamp = "1246638305"
+

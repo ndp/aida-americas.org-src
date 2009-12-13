@@ -1,5 +1,5 @@
 <?php
-// $Id: node_language.inc,v 1.7 2009/07/10 17:06:10 merlinofchaos Exp $
+// $Id: node_language.inc,v 1.7.2.1 2009/10/01 22:00:08 merlinofchaos Exp $
 
 /**
  * @file
@@ -11,7 +11,7 @@
  */
 function ctools_node_language_ctools_access() {
   if (module_exists('locale')) {
-    $items['node_language'] = array(
+    return array(
       'title' => t("Node: language"),
       'description' => t('Control access by node language.'),
       'callback' => 'ctools_node_language_ctools_access_check',
@@ -21,7 +21,6 @@ function ctools_node_language_ctools_access() {
       'summary' => 'ctools_node_language_ctools_acesss_summary',
       'required context' => new ctools_context_required(t('Node'), 'node'),
     );
-    return $items;
   }
 }
 

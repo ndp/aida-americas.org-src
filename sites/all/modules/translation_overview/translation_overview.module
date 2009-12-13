@@ -1,5 +1,5 @@
 <?php
-// $Id: translation_overview.module,v 1.13 2009/04/27 14:38:38 drewish Exp $
+// $Id: translation_overview.module,v 1.14 2009/05/19 17:21:02 drewish Exp $
 
 define('TRANSLATION_OVERVIEW_HIGH', 2);
 define('TRANSLATION_OVERVIEW_NORMAL', 1);
@@ -136,7 +136,7 @@ function translation_overview_nodeapi(&$node, $op) {
     case 'insert':
       // Only want to create a priority for translatable nodes that are untranslated.
       $types = translation_overview_node_types();
-      if ($types[$node->type] && empty($node->tnid)) {
+      if (empty($node->tnid) && !empty($types[$node->type])) {
         translation_overview_get_node_priority($node);
       }
   }

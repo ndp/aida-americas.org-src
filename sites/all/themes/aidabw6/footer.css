@@ -1,0 +1,48 @@
+/* $Id: footer.css,v 1.1 */
+/*  Created for AIDA by 
+Buttonwillow Six
+www.buttonwillowsix.com 
+based on Beginning  
+by gazwal.com */
+
+/*
+Reference:
+AIDA Blue: #003163
+AIDA Green:#006363
+AIDA Orange:#ce3100
+#fffcea
+*/
+#footer {
+/*	border-top: 1px solid #bdbdbd;*/
+	background-color: #ffffff;
+}
+
+#footer .footer-block {
+	float: left;
+	width: 300px;
+	margin: .8em 5px;
+	background-color: #ffffff;
+}
+
+#footer .footer-block, #footer .block {
+	background-color: #ffffff;
+}
+
+/*  primary links in footer => div#bottom-primary  
+**************************************************/
+#bottom-primary {
+/*	border-top: 1px solid #bdbdbd;*/
+	background: #003163;
+}
+#bottom-primary a{
+color: #fff;
+font-weight: bold;
+}
+
+/*  footer message  */
+#footer-message {
+	padding: .4em;
+	background-color: #fffcea;
+	text-align: center;
+	font-size: .8em;
+}

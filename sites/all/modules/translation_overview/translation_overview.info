@@ -6,9 +6,9 @@ core = 6.x
 php = 5.1
 package = Multilanguage
 
-; Information added by drupal.org packaging script on 2009-04-27
-version = "6.x-2.1-beta2"
+; Information added by drupal.org packaging script on 2009-05-24
+version = "6.x-2.2"
 core = "6.x"
 project = "translation_overview"
-datestamp = "1240843282"
+datestamp = "1243183910"
 

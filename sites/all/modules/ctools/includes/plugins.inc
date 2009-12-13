@@ -1,5 +1,5 @@
 <?php
-// $Id: plugins.inc,v 1.17 2009/08/13 23:35:26 merlinofchaos Exp $
+// $Id: plugins.inc,v 1.18.2.1 2009/10/01 21:10:46 merlinofchaos Exp $
 
 /**
  * @file
@@ -445,7 +445,12 @@ function ctools_plugin_get_function($plugin, $function_name) {
   // If cached the .inc file may not have been loaded. require_once is quite safe
   // and fast so it's okay to keep calling it.
   if (isset($plugin['file'])) {
-    require_once './' . $plugin['path'] . '/' . $plugin['file'];
+    // Plugins that are loaded from info files have the info file as
+    // $plugin['file'].  Don't try to run those.
+    $info = ctools_plugin_get_info($plugin['plugin module'], $plugin['plugin type']);
+    if (empty($info['info file'])) {
+      require_once './' . $plugin['path'] . '/' . $plugin['file'];
+    }
   }
 
   if (!isset($plugin[$function_name])) {
@@ -509,7 +514,12 @@ function ctools_plugin_get_class($plugin, $class_name) {
   // If cached the .inc file may not have been loaded. require_once is quite safe
   // and fast so it's okay to keep calling it.
   if (isset($plugin['file'])) {
-    require_once './' . $plugin['path'] . '/' . $plugin['file'];
+    // Plugins that are loaded from info files have the info file as
+    // $plugin['file'].  Don't try to run those.
+    $info = ctools_plugin_get_info($plugin['plugin module'], $plugin['plugin type']);
+    if (empty($info['info file'])) {
+      require_once './' . $plugin['path'] . '/' . $plugin['file'];
+    }
   }
 
   if (!isset($plugin[$class_name])) {
@@ -536,8 +546,8 @@ function ctools_plugin_get_class($plugin, $class_name) {
   
   // If we didn't explicitly include a file above, try autoloading a file
   // based on the class' name.
-  if (!isset($file) && file_exists($plugin['path'] . "/$class.inc")) {
-    require_once $plugin['path'] . "/$class.inc";
+  if (!isset($file) && file_exists($plugin['path'] . "/$class.class.php")) {
+    require_once $plugin['path'] . "/$class.class.php";
   }
 
   if (class_exists($class)) {

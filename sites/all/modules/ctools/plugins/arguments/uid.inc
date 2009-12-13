@@ -1,5 +1,5 @@
 <?php
-// $Id: uid.inc,v 1.9 2009/08/07 23:40:40 merlinofchaos Exp $
+// $Id: uid.inc,v 1.9.2.1 2009/10/01 22:39:02 merlinofchaos Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
  */
 function ctools_uid_ctools_arguments() {
   return array(
-    'title' => t("User ID"),
+    'title' => t("User: ID"),
     // keyword to use for %substitution
     'keyword' => 'user',
     'description' => t('Creates a user context from a user ID argument.'),

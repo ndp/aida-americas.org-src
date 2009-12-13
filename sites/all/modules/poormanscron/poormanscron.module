@@ -1,0 +1,94 @@
+<?php
+// $Id: poormanscron.module,v 1.21.2.2 2009/05/06 05:07:08 robloach Exp $ $Name: DRUPAL-6--1-1 $
+
+/**
+ * @file
+ * A module which runs Drupal cron jobs without the cron application.
+ */
+
+/**
+ * Implementation of hook_help().
+ */
+function poormanscron_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#poormanscron':
+      return '<p>'. t('The Poormanscron module runs cron jobs without the need of the cron application.') .'</p>';
+    case 'admin/settings/poormanscron':
+      return '<p>'. t('The settings provided here allow you to administer Poormancron.') .'</p>';
+  }
+}
+
+/**
+ * Implementation of hook_exit().
+ *
+ * Checks if poormanscron needs to be run. If this is the case, it invokes
+ * the cron hooks of all enabled modules, which are executed after
+ * all HTML is returned to the browser. So the user who kicks off the cron
+ * jobs should not notice any delay.
+ */
+function poormanscron_exit() {
+
+  // Calculate when the next poormanscron run is due.
+  $lastrun = variable_get('poormanscron_lastrun', 0);
+  $nextrun = $lastrun + 60 * variable_get('poormanscron_interval', 60);
+
+  // If the configured time has passed, start the next poormanscron run.
+  if (time() > $nextrun) {
+
+    // If this cron run fails to complete, wait a few minutes before retrying.
+    variable_set('poormanscron_lastrun',
+       $lastrun + 60 * variable_get('poormanscron_retry_interval', 10));
+
+    // Get the current Drupal messages. Use drupal_set_message() so that
+    // the messages aren't deleted in case the cron run fails and
+    // we don't get a chance to restore them below.
+    $saved_messages = drupal_set_message();
+
+    // Invoke the cron hooks of all enabled modules.
+    if (drupal_cron_run()) {
+      $message = 'Cron run completed (via poormanscron).';
+    }
+    else {
+      $message = 'Cron run unsuccessful (via poormanscron).';
+    }
+
+    // Write a message to the logs if the user wants us to do so.
+    if (variable_get('poormanscron_log_cron_runs', 1) == 1) {
+      watchdog('cron', $message);
+    }
+
+    $t = time();
+
+    // Update the time of the last poormanscron run (this one).
+    variable_set('poormanscron_lastrun', $t);
+
+    // Delete any messages added during the cron run (and existing prior
+    // messages).
+    drupal_get_messages();
+
+    // Restore any prior messages.
+    if (isset($saved_messages)) {
+      foreach ($saved_messages as $type => $types_messages) {
+        foreach ($types_messages as $message) {
+          drupal_set_message($message, $type);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implmentation of hook_menu().
+ */
+function poormanscron_menu() {
+  $items = array();
+  $items['admin/settings/poormanscron'] = array(
+    'title' => 'Poormanscron',
+    'description' => 'A module which runs Drupal cron jobs without the cron application.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('poormanscron_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'poormanscron.admin.inc',
+  );
+  return $items;
+}

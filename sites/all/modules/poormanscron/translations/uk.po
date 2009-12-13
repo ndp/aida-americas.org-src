@@ -1,0 +1,109 @@
+# $Id: uk.po,v 1.1.2.2 2009/05/25 17:53:53 podarok Exp $
+#
+# Ukrainian translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  poormanscron.admin.inc,v 1.1 2008/02/06 16:35:17 robloach
+#  poormanscron.module,v 1.21 2008/02/06 16:35:17 robloach
+#  poormanscron.info,v 1.2 2008/02/06 16:35:17 robloach
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: poormanscron\n"
+"POT-Creation-Date: 2009-05-25 20:37+0300\n"
+"PO-Revision-Date: 2009-05-25 20:51+0300\n"
+"Last-Translator: Andriy Podanenko <podarok@ua.fm>\n"
+"Language-Team: uk <podarok@ua.fm>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
+"X-Poedit-Language: Ukrainian\n"
+"X-Poedit-Country: UKRAINE\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: poormanscron.admin.inc:13
+msgid "Time intervals"
+msgstr "Інтервали часу"
+
+#: poormanscron.admin.inc:15
+msgid "Cron runs interval"
+msgstr "Інтервал запуску cron"
+
+#: poormanscron.admin.inc:18
+msgid "Minimum number of minutes between cron runs. Cron will actually execute during the first page request after the interval has elapsed."
+msgstr "Найменша кількість хвилин між запусками cron. Cron буде запущено протягом запиту першої сторінки після закінчення інтервалу"
+
+#: poormanscron.admin.inc:21
+msgid "Retry interval"
+msgstr "Інтервали спроб"
+
+#: poormanscron.admin.inc:24
+msgid "The number of minutes to wait after a cron run error before retrying."
+msgstr "Кількість хвилин до повторної спроби після невдалого запуску cron"
+
+#: poormanscron.admin.inc:27
+msgid "Logging"
+msgstr "Журналювання"
+
+#: poormanscron.admin.inc:29
+msgid "Log successful cron runs"
+msgstr "Логувати вдалі запуски cron"
+
+#: poormanscron.admin.inc:31;37
+msgid "Yes"
+msgstr "Так"
+
+#: poormanscron.admin.inc:31;37
+msgid "No"
+msgstr "Ні"
+
+#: poormanscron.admin.inc:32
+msgid "If you want to log successful cron runs to the Drupal watchdog, say Yes here. If those messages annoy you, disable them by selecting No."
+msgstr "Якщо бажаєте заносити в журнал вдалі запуски cron, виберіть \"Так\". Якщо повідомлення набридають Вам - вимкніть їх, вибравши \"Ні\""
+
+#: poormanscron.admin.inc:35
+msgid "Log poormanscron progress"
+msgstr "Запис в журнал процесу poormanscron"
+
+#: poormanscron.admin.inc:38
+msgid "If you want to log the progress of a poormanscron run to the Drupal watchdog, say Yes here. If those messages annoy you, disable them by selecting No."
+msgstr "Якщо бажаєте зберегти процес запуску poormanscron в журнали Drupal, вкажіть \"Так\". Якщо повідомлення набридають Вам - вимкніть їх, вибравши \"Ні\""
+
+#: poormanscron.module:15
+msgid "The Poormanscron module runs cron jobs without the need of the cron application."
+msgstr "Модуль Poormancron запускає завдання cron без необхідності наявності програми cron"
+
+#: poormanscron.module:17
+msgid "The settings provided here allow you to administer Poormancron."
+msgstr "Параметри вказані тут дозволяють Вам адмініструвати Poormancron."
+
+#: poormanscron.module:55;66
+msgid "cron"
+msgstr "cron"
+
+#: poormanscron.module:55
+msgid "Executed %hook via poormanscron, took %time."
+msgstr "Запущено %hook засобами poormanscron, тривалістю %time."
+
+#: poormanscron.module:66
+msgid "Cron run completed (via poormanscron)."
+msgstr "Завдання cron завершено (з допомогою poormanscron)"
+
+#: poormanscron.module:99
+#: poormanscron.info:0
+msgid "Poormanscron"
+msgstr "Poormanscron"
+
+#: poormanscron.module:100
+msgid "A module which runs Drupal cron jobs without the cron application."
+msgstr "Модуль, що виконує завдання cron для користувачів Drupal без доступу до програми cron"
+
+#: poormanscron.module:0
+msgid "poormanscron"
+msgstr "poormanscron"
+
+#: poormanscron.info:0
+msgid "Internal scheduler for users without a cron application."
+msgstr "Внутрішній планувальник для користувачів, яким недоступний cron"
+

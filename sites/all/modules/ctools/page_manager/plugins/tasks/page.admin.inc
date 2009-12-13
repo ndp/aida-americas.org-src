@@ -1,5 +1,5 @@
 <?php
-// $Id: page.admin.inc,v 1.18 2009/08/19 01:12:23 merlinofchaos Exp $
+// $Id: page.admin.inc,v 1.18.2.2 2009/10/13 20:38:17 merlinofchaos Exp $
 
 /**
  * @file
@@ -60,7 +60,7 @@ function page_manager_page_menu(&$items, $task) {
     $path             = array();
     $page_arguments   = array($subtask_id);
     $access_arguments = array($subtask->access);
-    $load_arguments   = array($subtask_id, '%index');
+    $load_arguments   = array($subtask_id, '%index', '%map');
 
     // Replace named placeholders with our own placeholder to load contexts.
     $position = 0;
@@ -83,7 +83,12 @@ function page_manager_page_menu(&$items, $task) {
           ctools_include('context');
           $plugin = ctools_get_argument($subtask->arguments[$name]['name']);
           if (isset($plugin['path placeholder'])) {
-            $placeholder = $plugin['path placeholder'];
+            if (function_exists($plugin['path placeholder'])) {
+              $placeholder = $plugin['path placeholder']($subtask->arguments[$name]);
+            }
+            else {
+              $placeholder = $plugin['path placeholder'];
+            }
           }
         }
         // If an argument, swap it out with our argument loader and make sure
@@ -490,6 +495,10 @@ function page_manager_page_form_basic_validate(&$form, &$form_state) {
   foreach (explode('/', $form_state['values']['path']) as $bit) {
     if (!isset($bit) || $bit === '') {
       continue;
+    }
+
+    if ($bit == '%' || $bit == '!') {
+      form_error($form['path'], t('You cannot have an unnamed placeholder (% or ! by itself). Please name your placeholder by adding a short piece of descriptive text to the % or !, such as %user or %node.'));
     }
 
     if ($bit[0] == '%') {

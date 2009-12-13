@@ -1,5 +1,5 @@
 <?php
-// $Id: book_parent.inc,v 1.2 2009/07/20 16:01:20 merlinofchaos Exp $
+// $Id: book_parent.inc,v 1.2.2.1 2009/10/01 22:00:09 merlinofchaos Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * Implementation of specially named hook_ctools_relationships().
  */
 function ctools_book_parent_ctools_relationships() {
-  $args['book_parent'] = array(
+  return array(
     'title' => t('Book parent'),
     'keyword' => 'book_parent',
     'description' => t('Adds a book parent from a node context.'),

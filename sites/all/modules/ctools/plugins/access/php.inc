@@ -1,5 +1,5 @@
 <?php
-// $Id: php.inc,v 1.1 2009/07/20 17:57:47 merlinofchaos Exp $
+// $Id: php.inc,v 1.1.2.1 2009/10/01 22:00:08 merlinofchaos Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * Implementation of specially named hook_ctools_access().
  */
 function ctools_php_ctools_access() {
-  $args['php'] = array(
+  return array(
     'title' => t("PHP Code"),
     'description' => t('Control access through arbitrary PHP code.'),
     'callback' => 'ctools_php_ctools_access_check',
@@ -19,8 +19,6 @@ function ctools_php_ctools_access() {
     'summary' => 'ctools_php_ctools_acesss_summary',
     'all contexts' => TRUE,
   );
-
-  return $args;
 }
 
 /**

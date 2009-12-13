@@ -1,5 +1,5 @@
 <?php
-// $Id: context-task-handler.inc,v 1.23 2009/08/19 18:03:38 merlinofchaos Exp $
+// $Id: context-task-handler.inc,v 1.23.2.2 2009/10/01 22:26:30 merlinofchaos Exp $
 
 /**
  * @file
@@ -49,6 +49,22 @@ function ctools_context_handler_render($task, $subtask, $contexts, $args, $page 
         if (!$page) {
           return $info;
         }
+
+        if ($subtask) {
+          $task_name = page_manager_make_task_name($task['name'], $subtask['name']);
+        }
+        else {
+          $task_name = $task['name'];
+        }
+
+        page_manager_get_current_page(array(
+          'name' => $task_name,
+          'task' => $task,
+          'subtask' => $subtask,
+          'contexts' => $contexts,
+          'arguments' => $args,
+          'handler' => $handler,
+        ));
 
         /*
         // Only do this if something hasn't already changed the active menu,

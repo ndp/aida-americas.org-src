@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.42 2009/03/24 23:06:24 merlinofchaos Exp $
+// $Id: query.inc,v 1.50 2009/10/05 22:49:03 merlinofchaos Exp $
 /**
  * @file query.inc
  * Defines the query object which is the underlying layer in a View.
@@ -116,7 +116,19 @@ class views_query {
    */
   function set_distinct($value = TRUE) {
     if (!(isset($this->no_distinct) && $value)) {
-      $this->distinct = $value;
+      // Hack in a check to see if node_access is going to add its own DISTINCT
+      // and break this query.
+      // See http://drupal.org/node/284392 for the core bug.
+      //
+      // We want to bypass views distinct code if this bug will be triggered so
+      // if the base table is node and there is a node access module, bypass
+      // views distinct code.
+      if ($this->base_table != 'node' || !node_access_view_all_nodes()) {
+        $this->distinct = FALSE;
+      }
+      else {
+        $this->distinct = $value;
+      }
     }
   }
 
@@ -189,6 +201,11 @@ class views_query {
       $alias = $alias_base . '_' . $count++;
     }
 
+    // Make sure this join is adjusted for our relationship.
+    if ($link_point && isset($this->relationships[$link_point])) {
+      $join = $this->adjust_join($join, $link_point);
+    }
+
     // Add the table directly to the queue to avoid accidentally marking
     // it.
     $this->table_queue[$alias] = array(
@@ -205,12 +222,6 @@ class views_query {
       'base' => $base,
     );
     return $alias;
-
-    return $alias;
-/*
-    if ($alias = $this->add_table($join->table, $link_point, $join, $alias)) {
-    }
-*/
   }
 
   /**
@@ -248,7 +259,13 @@ class views_query {
       return FALSE;
     }
 
-    return $this->queue_table($table, $relationship, $this->adjust_join($join, $relationship), $alias);
+    if (!$join) {
+      $join = $this->get_join_data($table, $this->relationships[$relationship]['base']);
+    }
+
+    $join = $this->adjust_join($join, $relationship);
+
+    return $this->queue_table($table, $relationship, $join, $alias);
   }
 
   /**
@@ -293,7 +310,12 @@ class views_query {
     }
 
     if (!$alias && $join && $relationship && !empty($join->adjusted) && $table != $join->table) {
-      $alias = $table;
+      if ($relationship == $this->base_table) {
+        $alias = $table;
+      }
+      else {
+        $alias = $relationship . '_' . $table;
+      }
     }
 
     // Check this again to make sure we don't blow up existing aliases for already
@@ -670,7 +692,7 @@ class views_query {
     $groups = &$this->$where;
 
     if (!isset($group)) {
-      $group = max(array_keys($groups)) + 1;
+      $group = empty($groups) ? 1 : max(array_keys($groups)) + 1;
     }
 
     // Create an empty group
@@ -882,6 +904,7 @@ class views_query {
     if (empty($this->no_distinct) && $this->distinct && !empty($this->fields)) {
       if (!empty($this->fields[$this->base_field])) {
         $this->fields[$this->base_field]['distinct'] = TRUE;
+        $this->add_groupby($this->base_field);
       }
     }
 
@@ -938,6 +961,9 @@ class views_query {
       }
       else if (!empty($field['aggregate'])) {
         $has_aggregate = TRUE;
+      }
+      elseif ($this->distinct && !in_array($fieldname, $this->groupby)) {
+        $string = $GLOBALS['db_type'] == 'pgsql' ? "FIRST($string)" : $string;
       }
       else {
         $non_aggregates[] = $fieldname;

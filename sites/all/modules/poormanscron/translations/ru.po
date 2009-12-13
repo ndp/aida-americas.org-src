@@ -1,0 +1,92 @@
+# $Id: ru.po,v 1.1.2.1 2009/05/06 05:26:57 robloach Exp $
+#
+# Russian translation of Poormanscron (Drupal module)
+# Copyright 2008, Ne01eX <Ne01eX@rambler.ru>
+#
+# Generated from files:
+#  poormanscron.module,v 1.18.2.1 2007/01/14 12:34:37 uwe
+#  poormanscron.info,v 1.1.2.2 2007/01/14 12:34:37 uwe
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Poormanscron 5.x-1.1\n"
+"POT-Creation-Date: 2008-11-14 20:53+0500\n"
+"PO-Revision-Date: 2008-11-14 21:47+0500\n"
+"Last-Translator: Ne01eX <Ne01eX@rambler.ru>\n"
+"Language-Team: Russian <Ne01eX@rambler.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: poormanscron.module:17
+msgid "Runs Drupal cron jobs without the cron application."
+msgstr "Ð’Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ Ð·Ð°Ð´Ð°Ð½Ð¸Ð¹ Ð¿Ð»Ð°Ð½Ð¸Ñ€Ð¾Ð²Ñ‰Ð¸ÐºÐ° Drupal Ð±ÐµÐ· ÑƒÑ‚Ð¸Ð»Ð¸Ñ‚Ñ‹ cron."
+
+#: poormanscron.module:109 poormanscron.info:0
+msgid "Poormanscron"
+msgstr "ÐÐ²Ñ‚Ð¾Ð½Ð¾Ð¼Ð½Ñ‹Ð¹ Ð¿Ð»Ð°Ð½Ð¸Ñ€Ð¾Ð²Ñ‰Ð¸Ðº"
+
+#: poormanscron.module:110
+msgid "A module which runs Drupal cron jobs without the cron application."
+msgstr "ÐœÐ¾Ð´ÑƒÐ»ÑŒ Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÑÐµÑ‚ Ð·Ð°Ð´Ð°Ð½Ð¸Ñ Ð¿Ð»Ð°Ð½Ð¸Ñ€Ð¾Ð²Ñ‰Ð¸ÐºÐ° Drupal Ð±ÐµÐ· ÑƒÑ‚Ð¸Ð»Ð¸Ñ‚Ñ‹ cron Ð½Ð° ÑÐµÑ€Ð²ÐµÑ€Ðµ."
+
+#: poormanscron.module:125
+msgid "Time intervals"
+msgstr "Ð’Ñ€ÐµÐ¼ÐµÐ½Ð½Ñ‹Ðµ Ð¸Ð½Ñ‚ÐµÑ€Ð²Ð°Ð»Ñ‹"
+
+#: poormanscron.module:127
+msgid "Cron runs interval"
+msgstr "Ð˜Ð½Ñ‚ÐµÑ€Ð²Ð°Ð» Ð·Ð°Ð¿ÑƒÑÐºÐ° Ð¿Ð»Ð°Ð½Ð¸Ñ€Ð¾Ð²Ñ‰Ð¸ÐºÐ°"
+
+#: poormanscron.module:130
+msgid "Minimum number of minutes between cron runs. Cron will actually execute during the first page request after the interval has elapsed."
+msgstr "ÐœÐ¸Ð½Ð¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð²Ñ€ÐµÐ¼Ñ Ð¼ÐµÐ¶Ð´Ñƒ Ð·Ð°Ð¿ÑƒÑÐºÐ°Ð¼Ð¸ Ð¿Ð»Ð°Ð½Ð¸Ñ€Ð¾Ð²Ñ‰Ð¸ÐºÐ°. Ð¤Ð°ÐºÑ‚Ð¸Ñ‡ÐµÑÐºÐ¸, Ð¿Ð»Ð°Ð½Ð¸Ñ€Ð¾Ð²Ñ‰Ð¸Ðº Ð±ÑƒÐ´ÐµÑ‚ Ð·Ð°Ð¿ÑƒÑÐºÐ°Ñ‚ÑŒ Ð·Ð°Ð´Ð°Ð½Ð¸Ñ Ð½Ð° Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ Ð¿Ð¾ÑÐ»Ðµ Ð·Ð°Ð¿Ñ€Ð¾ÑÐ° Ð³Ð»Ð°Ð²Ð½Ð¾Ð¹ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹ ÑÐ°Ð¹Ñ‚Ð°, Ð½Ð¾ Ð½Ðµ Ñ€Ð°Ð½ÐµÐµ, Ñ‡ÐµÐ¼ Ð¸ÑÑ‚ÐµÑ‡ÐµÑ‚ Ð´Ð°Ð½Ð½Ñ‹Ð¹ Ð¿ÐµÑ€Ð¸Ð¾Ð´ Ð²Ñ€ÐµÐ¼ÐµÐ½Ð¸."
+
+#: poormanscron.module:133
+msgid "Retry interval"
+msgstr "Ð˜Ð½Ñ‚ÐµÑ€Ð²Ð°Ð» Ð¿Ð¾Ð²Ñ‚Ð¾Ñ€Ð°"
+
+#: poormanscron.module:136
+msgid "The number of minutes to wait after a cron run error before retrying."
+msgstr "Ð’Ñ€ÐµÐ¼Ñ Ð¿Ð°ÑƒÐ·Ñ‹ Ð¿ÐµÑ€ÐµÐ´ ÑÐ»ÐµÐ´ÑƒÑŽÑ‰ÐµÐ¹ Ð¿Ð¾Ð¿Ñ‹Ñ‚ÐºÐ¾Ð¹ Ð·Ð°Ð¿ÑƒÑÐºÐ° Ð¿Ð»Ð°Ð½Ð¸Ñ€Ð¾Ð²Ñ‰Ð¸ÐºÐ°"
+
+#: poormanscron.module:139
+msgid "Logging"
+msgstr "Ð–ÑƒÑ€Ð½Ð°Ð»Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ"
+
+#: poormanscron.module:141
+msgid "Log successful cron runs"
+msgstr "Ð—Ð°Ð¿Ð¸ÑÑ‹Ð²Ð°Ñ‚ÑŒ Ð² Ð¶ÑƒÑ€Ð½Ð°Ð» ÑƒÐ´Ð°Ñ‡Ð½Ñ‹Ðµ Ð·Ð°Ð¿ÑƒÑÐºÐ¸ Ð¿Ð»Ð°Ð½Ð¸Ñ€Ð¾Ð²Ñ‰Ð¸ÐºÐ°"
+
+#: poormanscron.module:143;149
+msgid "Yes"
+msgstr "Ð”Ð°"
+
+#: poormanscron.module:143;149
+msgid "No"
+msgstr "ÐÐµÑ‚"
+
+#: poormanscron.module:144
+msgid "If you want to log successful cron runs to the Drupal watchdog, say Yes here. If those messages annoy you, disable them by selecting No."
+msgstr "Ð•ÑÐ»Ð¸ Ð²Ñ‹ Ñ…Ð¾Ñ‚Ð¸Ñ‚Ðµ Ð²Ð¸Ð´ÐµÑ‚ÑŒ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ Ð¾Ð± ÑƒÐ´Ð°Ñ‡Ð½Ñ‹Ñ… Ð·Ð°Ð¿ÑƒÑÐºÐ°Ñ… Ð¿Ð»Ð°Ð½Ð¸Ñ€Ð¾Ð²Ñ‰Ð¸ÐºÐ° Ð² ÑÐ¸ÑÑ‚ÐµÐ¼Ð½Ð¾Ð¼ Ð¶ÑƒÑ€Ð½Ð°Ð»Ðµ Drupal'a, Ð²Ñ‹Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ð”Ð°. Ð•ÑÐ»Ð¸ ÑÑ‚Ð¸ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ Ð²Ð°Ñ Ñ€Ð°Ð·Ð´Ñ€Ð°Ð¶Ð°ÑŽÑ‚, Ð¾Ñ‚ÐºÐ»ÑŽÑ‡Ð¸Ñ‚Ðµ Ð¸Ñ…, Ð²Ñ‹Ð±Ñ€Ð°Ð² ÐÐµÑ‚."
+
+#: poormanscron.module:147
+msgid "Log poormanscron progress"
+msgstr "Ð—Ð°Ð¿Ð¸ÑÑ‹Ð²Ð°Ñ‚ÑŒ Ð² Ð¶ÑƒÑ€Ð½Ð°Ð» Ð¿Ñ€Ð¾Ð³Ñ€ÐµÑÑ Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ñ Ð·Ð°Ð´Ð°Ð½Ð¸Ð¹"
+
+#: poormanscron.module:150
+msgid "If you want to log the progress of a poormanscron run to the Drupal watchdog, say Yes here. If those messages annoy you, disable them by selecting No."
+msgstr "Ð•ÑÐ»Ð¸ Ð²Ñ‹ Ñ…Ð¾Ñ‚Ð¸Ñ‚Ðµ Ð²Ð¸Ð´ÐµÑ‚ÑŒ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ Ð¾ Ð¿Ñ€Ð¾Ð³Ñ€ÐµÑÑÐµ Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ñ Ð¿Ð»Ð°Ð½Ð¸Ñ€Ð¾Ð²Ñ‰Ð¸ÐºÐ° Ð² ÑÐ¸ÑÑ‚ÐµÐ¼Ð½Ð¾Ð¼ Ð¶ÑƒÑ€Ð½Ð°Ð»Ðµ Drupal'a, Ð²Ñ‹Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ð”Ð°. Ð•ÑÐ»Ð¸ ÑÑ‚Ð¸ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ Ð²Ð°Ñ Ñ€Ð°Ð·Ð´Ñ€Ð°Ð¶Ð°ÑŽÑ‚, Ð¾Ñ‚ÐºÐ»ÑŽÑ‡Ð¸Ñ‚Ðµ Ð¸Ñ…, Ð²Ñ‹Ð±Ñ€Ð°Ð² ÐÐµÑ‚."
+
+#: poormanscron.module:57;68
+msgid "cron"
+msgstr "cron"
+
+#: poormanscron.module:0
+msgid "poormanscron"
+msgstr "Ð°Ð²Ñ‚Ð¾Ð½Ð¾Ð¼Ð½Ñ‹Ð¹ Ð¿Ð»Ð°Ð½Ð¸Ñ€Ð¾Ð²Ñ‰Ð¸Ðº"
+
+#: poormanscron.info:0
+msgid "Internal scheduler for users without a cron application."
+msgstr "Ð’ÑÑ‚Ñ€Ð¾ÐµÐ½Ð½Ð½Ñ‹Ð¹ Ð¿Ð»Ð°Ð½Ð¸Ñ€Ð¾Ð²Ñ‰Ð¸Ðº Ð´Ð»Ñ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÐµÐ¹, Ð½Ðµ Ð¸Ð¼ÐµÑŽÑ‰Ð¸Ñ… Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð° Ðº cron."

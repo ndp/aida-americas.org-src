@@ -1,0 +1,106 @@
+# $Id: nl.po,v 1.2.2.2 2009/06/06 15:37:33 libeco Exp $
+#
+# Dutch translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  poormanscron.admin.inc,v 1.1 2008/02/06 16:35:17 robloach
+#  poormanscron.module,v 1.21 2008/02/06 16:35:17 robloach
+#  poormanscron.info,v 1.2 2008/02/06 16:35:17 robloach
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2009-05-28 15:56+0200\n"
+"PO-Revision-Date: 2009-05-28 16:13+0100\n"
+"Last-Translator: L.B. Cohn <lichai@999games.nl>\n"
+"Language-Team: Dutch <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: poormanscron.admin.inc:13
+msgid "Time intervals"
+msgstr "Tijdinterval"
+
+#: poormanscron.admin.inc:15
+msgid "Cron runs interval"
+msgstr "Cron runs intervallen"
+
+#: poormanscron.admin.inc:18
+msgid "Minimum number of minutes between cron runs. Cron will actually execute during the first page request after the interval has elapsed."
+msgstr "Minimum aantal minuten tussen cron runs. Cron zal pas uitgevoerd worden bij de eerste paginaoproep nadat deze interval voorbij is."
+
+#: poormanscron.admin.inc:21
+msgid "Retry interval"
+msgstr "Herprobeerinterval"
+
+#: poormanscron.admin.inc:24
+msgid "The number of minutes to wait after a cron run error before retrying."
+msgstr "Het aantal minuten om te wachten met herproberen nadat een cron run een fout gaf."
+
+#: poormanscron.admin.inc:27
+msgid "Logging"
+msgstr "Logging"
+
+#: poormanscron.admin.inc:29
+msgid "Log successful cron runs"
+msgstr "Log succesvolle cron runs"
+
+#: poormanscron.admin.inc:31;37
+msgid "Yes"
+msgstr "Ja"
+
+#: poormanscron.admin.inc:31;37
+msgid "No"
+msgstr "Nee"
+
+#: poormanscron.admin.inc:32
+msgid "If you want to log successful cron runs to the Drupal watchdog, say Yes here. If those messages annoy you, disable them by selecting No."
+msgstr "Als je de succesvolle cron runs van poormanscron wilt loggen naar de Drupal watchdog kun je hier Ja zeggen. Als deze berichten je irriteren kies je Nee."
+
+#: poormanscron.admin.inc:35
+msgid "Log poormanscron progress"
+msgstr "Log poormanscron voortgang"
+
+#: poormanscron.admin.inc:38
+msgid "If you want to log the progress of a poormanscron run to the Drupal watchdog, say Yes here. If those messages annoy you, disable them by selecting No."
+msgstr "Als je de voortgang van poormanscron wilt loggen naar de Drupal watchdog kun je hier Ja zeggen. Als deze berichten je irriteren kies je Nee."
+
+#: poormanscron.module:15
+msgid "The Poormanscron module runs cron jobs without the need of the cron application."
+msgstr "De Poormanscronmodule voert crontaken uit zonder een cronapplicatie nodig te hebben."
+
+#: poormanscron.module:17
+msgid "The settings provided here allow you to administer Poormancron."
+msgstr "Met deze instellingen kun je Poormanscron beheren."
+
+#: poormanscron.module:55;66
+msgid "cron"
+msgstr "cron"
+
+#: poormanscron.module:55
+msgid "Executed %hook via poormanscron, took %time."
+msgstr "%hook is uitgevoerd via poormanscron, gebruikte tijd: %time."
+
+#: poormanscron.module:66
+msgid "Cron run completed (via poormanscron)."
+msgstr "Cron run is gelukt (via poormanscron)"
+
+#: poormanscron.module:99
+#: poormanscron.info:0
+msgid "Poormanscron"
+msgstr "Poormanscron"
+
+#: poormanscron.module:100
+msgid "A module which runs Drupal cron jobs without the cron application."
+msgstr "Een module die Drupal crontaken kan uitvoeren zonder cronapplicatie."
+
+#: poormanscron.module:0
+msgid "poormanscron"
+msgstr "poormanscron"
+
+#: poormanscron.info:0
+msgid "Internal scheduler for users without a cron application."
+msgstr "Interne planner voor gebruikers zonder een cronapplicatie."
+

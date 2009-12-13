@@ -1,5 +1,5 @@
 <?php
-// $Id: context.inc,v 1.33 2009/08/03 21:41:41 merlinofchaos Exp $
+// $Id: context.inc,v 1.33.2.4 2009/10/09 22:35:55 merlinofchaos Exp $
 
 /**
  * @file
@@ -610,13 +610,21 @@ function ctools_context_keyword_substitute($string, $keywords, $contexts) {
 
       if (strpos($keyword, ':')) {
         list($context, $converter) = explode(':', $keyword);
-        if (isset($context_keywords[$context])) {
+        if (empty($context->empty) && isset($context_keywords[$context])) {
           $keywords['%' . $keyword] = ctools_context_convert_context($context_keywords[$context], $converter);
+        }
+        else {
+          $keywords['%' . $keyword] = '';
         }
       }
       else {
         if (isset($context_keywords[$keyword])) {
-          $keywords['%' . $keyword] = $context_keywords[$keyword]->title;
+          if (empty($context_keywords[$keyword]->empty)) {
+            $keywords['%' . $keyword] = $context_keywords[$keyword]->title;
+          }
+          else {
+            $keywords['%' . $keyword] = '';
+          }
         }
       }
     }
@@ -1413,13 +1421,22 @@ function ctools_access_new_test($plugin) {
     }
   }
 
-  // Setup plugin defaults.
+
+  $default = NULL;
   if (isset($plugin['default'])) {
-    if (is_array($plugin['default'])) {
-      $test['settings'] = $plugin['default'];
+    $default = $plugin['default'];
+  }
+  elseif (isset($plugin['defaults'])) {
+    $default = $plugin['defaults'];
+  }
+
+  // Setup plugin defaults.
+  if (isset($default)) {
+    if (is_array($default)) {
+      $test['settings'] = $default;
     }
-    else if (function_exists($plugin['default'])) {
-      $test['settings'] = $plugin['default']();
+    else if (function_exists($default)) {
+      $test['settings'] = $default();
     }
     else {
       $test['settings'] = array();

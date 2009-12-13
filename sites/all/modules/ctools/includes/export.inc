@@ -1,5 +1,5 @@
 <?php
-// $Id: export.inc,v 1.19 2009/08/17 18:41:04 merlinofchaos Exp $
+// $Id: export.inc,v 1.19.2.2 2009/10/08 16:12:17 merlinofchaos Exp $
 
 /**
  * @file
@@ -80,8 +80,8 @@ define('EXPORT_IN_CODE', 0x02);
  *   An array of arguments whose actual use is defined by the $type argument.
  */
 function ctools_export_load_object($table, $type = 'all', $args = array()) {
-  static $cache = array();
-  static $cached_database = array();
+  $cache = &ctools_static(__FUNCTION__);
+  $cached_database = &ctools_static('ctools_export_load_object_all');
 
   $schema = ctools_export_get_schema($table);
   $export = $schema['export'];
@@ -146,8 +146,8 @@ function ctools_export_load_object($table, $type = 'all', $args = array()) {
     $object->type = t('Normal');
     $object->export_type = EXPORT_IN_DATABASE;
     // Determine if default object is enabled or disabled.
-    if (isset($status[$object->name])) {
-      $object->disabled = $status[$object->name];
+    if (isset($status[$object->{$export['key']}])) {
+      $object->disabled = $status[$object->{$export['key']}];
     }
 
     $cache[$table][$object->{$export['key']}] = $object;
@@ -220,6 +220,27 @@ function ctools_export_load_object($table, $type = 'all', $args = array()) {
 }
 
 /**
+ * Reset all static caches in ctools_export_load_object() or static caches for 
+ * a given table in ctools_export_load_object().
+ * 
+ * @param $table
+ *   String that is the name of a table. If not defined, all static caches in 
+ *   ctools_export_load_object() will be reset.
+ */
+function ctools_export_load_object_reset($table = NULL) {
+  if (empty($table)) {
+    ctools_static_reset('ctools_export_load_object');
+    ctools_static_reset('ctools_export_load_object_all');
+  }
+  else {
+    $cache = &ctools_static('ctools_export_load_object');
+    $cached_database = &ctools_static('ctools_export_load_object_all');
+    unset($cache[$table]);
+    unset($cached_database[$table]);
+  }
+}
+
+/**
  * Get the default version of an object, if it exists.
  *
  * This function doesn't care if an object is in the database or not and
@@ -247,8 +268,8 @@ function ctools_get_default_object($table, $name) {
   $object = $defaults[$name];
 
   // Determine if default object is enabled or disabled.
-  if (isset($status[$object->name])) {
-    $object->disabled = $status[$object->name];
+  if (isset($status[$object->{$export['key']}])) {
+    $object->disabled = $status[$object->{$export['key']}];
   }
 
   $object->type = t('Default');
@@ -523,14 +544,15 @@ function ctools_export_set_status($table, $name, $new_status = TRUE) {
 function ctools_export_set_object_status($object, $new_status = TRUE) {
   $table = $object->table;
   $schema = ctools_export_get_schema($table);
+  $export = $schema['export'];
   $status = variable_get($schema['export']['status'], array());
 
   // Compare
   if (!$new_status && $object->export_type & EXPORT_IN_DATABASE) {
-    unset($status[$object->name]);
+    unset($status[$object->{$export['key']}]);
   }
   else {
-    $status[$object->name] = $new_status;
+    $status[$object->{$export['key']}] = $new_status;
   }
 
   variable_set($schema['export']['status'], $status);

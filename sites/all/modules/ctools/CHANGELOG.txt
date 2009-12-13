@@ -1,5 +1,54 @@
 Current API VERSION: 1.1.1. See API.txt for more information.
 
+ctools 6.x-1.2
+==============
+#605990 by johnskulski: Prevent Views PHP error if display was removed.
+#605968 by johnskulski: Show more information in the collapsible for Views Panes.
+
+ctools 6.x-1.1
+==============
+
+Fix problem with ctools_set_page_token()
+Add a couple of support functions for ctools_set_page_token that are meant to be used by themes.
+#563916 by Damien Tournoud: ajax before() operation not using behaviors correctly.
+#553112: dependent.js failed to set proper initial state if inside an already hidden element.
+#569508 by markus_petrux: Update user_profile content type.
+#558942 by Roi Danton: In wizard.inc, be sure to check cancel path if return path is not set, as noted in documentation.
+#568578 by Roger Lopez: Add client side redirect AJAX command.
+#561788 by sirkitree: Add client side reload AJAX command.
+#566256 by mikl: HTML safe converter for string context.
+#558856 by sdboyer: Allow Views Panes to mark contexts optional.
+#558902 by Roi Danton: Better documentation of how to handle the back button with wizard.inc.
+#565808 by sirkitree: Replace /nojs/g instead of just "/nojs/" with ajax, allowing nojs to be the last item in a URL.
+#564522 by Roger Lopez: Prevent accidental inclusion of .info files in plugins.
+#558918: Collapsible can be set to remember state between page loads. Allow collapsible handle and content to be separated and not have to be divs.
+#545208: Page cache needs to be cleared when page manager pages are saved.
+#577542 by EclipseGC: Add footer message as a page element.
+#581670: Fix autocomplete in the modal so that using it does not submit the form.
+#580342: Fix Page Manager variant import, which did not work at all.
+#589342: Introduce page_manager_get_current_page() to get information about the current page manager page.
+#564492: by Roger Lopez: Change default class includes from .inc files to .class.php files so they don't get read as plugins.
+#590654 by fenstrat: Add submit form as a possible AJAX operation.
+#534034 by DamienMcKenna: Add access rule for term ID selection.
+#531522 by alex_b: Introduce ctools_static() modelled after static object handling in D7.
+#541428 by viz8: User name as a context argument.
+#592692 by johnskulski: use theme_links instead of theme('links') for dropdown because we do not actually want a theme to change this output.
+#547686: Allow view panes to better respect the default pager settings.
+#424548: Add a warning about overridng pager settings with Views AJAX.
+#555802: Add an administrative title to custom content panes to make them easier to manage.
+#556870: Node edit settings form context autocomplete was not working correctly.
+#491884 by ayalon: Provide blank substitutions for optional contexts that do not appear.
+#599136 by alex_b: Fix incorrect references to object unique name in export.inc.
+Allow the string argument to accept the entire path tail.
+#578410: Search path override, plus search form and search result content types.
+#567778: Allow override of contact and user contact pages.
+Allow override of blog and user blog pages.
+Allow override of poll page.
+#596450 by Scott Reynolds: Provide an ajax command response to reset the modal to the 'loading' state.
+#554678: Do not allow % or ! by itself as part of a path, as that breaks arguments.
+#599428: Enable and Disable variant buttons led to "Operation trail does not exist."
+Show a LOCK icon on the page list when pages are locked for editing either by the current user or another user.
+
 ctools 6.x-1.0
 ==============
 

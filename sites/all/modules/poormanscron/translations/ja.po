@@ -1,0 +1,106 @@
+# $Id: ja.po,v 1.1.2.1 2008/04/08 13:27:43 imagine Exp $
+#
+# Japanese translation of Drupal (poormanscron)
+# Copyright 2008 0829 <hixarg+0829@gmail.com>
+# Generated from files:
+#  poormanscron.admin.inc,v 1.1 2008/02/06 16:35:17 robloach Exp
+#  poormanscron.info,v 1.2 2008/02/06 16:35:17 robloach Exp
+#  poormanscron.module,v 1.21 2008/02/06 16:35:17 robloach Exp
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 6.x\n"
+"POT-Creation-Date: 2008-04-08 00:48+0900\n"
+"PO-Revision-Date: 2008-04-08 01:06+0900\n"
+"Last-Translator: 0829 <hixarg+0829@gmail.com>\n"
+"Language-Team: DRUPAL*DRUPAL <hixarg+0829@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: modules/poormanscron/poormanscron.admin.inc:13
+msgid "Time intervals"
+msgstr "実行間隔の設定"
+
+#: modules/poormanscron/poormanscron.admin.inc:15
+msgid "Cron runs interval"
+msgstr "Cron の実行間隔"
+
+#: modules/poormanscron/poormanscron.admin.inc:18
+msgid "Minimum number of minutes between cron runs. Cron will actually execute during the first page request after the interval has elapsed."
+msgstr "Cron を実行する間隔を（分）単位で指定します。 ここで設定した時間経過後に初めてページがリクエストされた時、Cron が実行されます。"
+
+#: modules/poormanscron/poormanscron.admin.inc:21
+msgid "Retry interval"
+msgstr "再試行の間隔"
+
+#: modules/poormanscron/poormanscron.admin.inc:24
+msgid "The number of minutes to wait after a cron run error before retrying."
+msgstr "Cron 実行エラーから再試行までの間隔を（分）単位で指定します。"
+
+#: modules/poormanscron/poormanscron.admin.inc:27
+msgid "Logging"
+msgstr "ログの記録"
+
+#: modules/poormanscron/poormanscron.admin.inc:29
+msgid "Log successful cron runs"
+msgstr "Cron 実行の成功ログ"
+
+#: modules/poormanscron/poormanscron.admin.inc:31;37
+msgid "Yes"
+msgstr "はい"
+
+#: modules/poormanscron/poormanscron.admin.inc:31;37
+msgid "No"
+msgstr "いいえ"
+
+#: modules/poormanscron/poormanscron.admin.inc:32
+msgid "If you want to log successful cron runs to the Drupal watchdog, say Yes here. If those messages annoy you, disable them by selecting No."
+msgstr "Cron の実行が成功したことを Drupal の Watchdog モジュールにログとして残したい場合は「はい」を選択します。 それらのメッセージが不要な場合は「いいえ」を選択します。"
+
+#: modules/poormanscron/poormanscron.admin.inc:35
+msgid "Log poormanscron progress"
+msgstr "プアマンズ Cron モジュールの進行状況ログ"
+
+#: modules/poormanscron/poormanscron.admin.inc:38
+msgid "If you want to log the progress of a poormanscron run to the Drupal watchdog, say Yes here. If those messages annoy you, disable them by selecting No."
+msgstr "プアマンズ Cron モジュールの進行状況を Drupal の Watchdog モジュールにログとして残したい場合は「はい」を選択します。 それらのメッセージが不要な場合は「いいえ」を選択します。"
+
+#: modules/poormanscron/poormanscron.info:0
+#: modules/poormanscron/poormanscron.module:99
+msgid "Poormanscron"
+msgstr "プアマンズ Cron"
+
+#: modules/poormanscron/poormanscron.info:0
+msgid "Internal scheduler for users without a cron application."
+msgstr "Cron タスクを管理するための内部スケジューラです。"
+
+#: modules/poormanscron/poormanscron.module:15
+msgid "The Poormanscron module runs cron jobs without the need of the cron application."
+msgstr "プアマンズ Cron モジュールは、Cron アプリケーションを必要とせずに Cron ジョブを実行します。"
+
+#: modules/poormanscron/poormanscron.module:17
+msgid "The settings provided here allow you to administer Poormancron."
+msgstr "プアマンズ Cron の管理設定を行います。"
+
+#: modules/poormanscron/poormanscron.module:55;66
+msgid "cron"
+msgstr "cron"
+
+#: modules/poormanscron/poormanscron.module:55
+msgid "Executed %hook via poormanscron, took %time."
+msgstr "プアマンズ Cron を経由した %hook の実行に %time を要しました。"
+
+#: modules/poormanscron/poormanscron.module:66
+msgid "Cron run completed (via poormanscron)."
+msgstr "Cron の実行が完了しました。（プアマンズ Cron 経由）"
+
+#: modules/poormanscron/poormanscron.module:100
+msgid "A module which runs Drupal cron jobs without the cron application."
+msgstr "Drupal の Cron ジョブを実行するためのモジュールです。"
+
+#: modules/poormanscron/poormanscron.module:0
+msgid "poormanscron"
+msgstr "プアマンズ Cron"
+

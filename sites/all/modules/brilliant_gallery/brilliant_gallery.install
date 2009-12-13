@@ -1,0 +1,127 @@
+<?php
+// $Id: brilliant_gallery.install,v 1.1.4.3.2.1 2009/01/09 11:44:20 tjfulopp Exp $
+
+/**
+ * Implementation of hook_schema().
+ */
+
+function brilliant_gallery_schema() {
+
+  $schema['brilliant_gallery_checklist'] = array(
+    'description' => t('Table tracing which Brilliant Gallery images are hidden or visible.'),
+    'fields' => array(
+      'nid' => array(
+        'description' => t('Unused now.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'size' => 'normal',
+        'default' => 0,
+      ),
+      'user' => array(
+        'description' => t('User ID.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'size' => 'normal',
+        'default' => 0,
+      ),
+      'qid' => array(
+        'description' => t('Image.'),
+        'type' => 'text',
+        #'unsigned' => FALSE,
+        'not null' => TRUE,
+        'size' => 'normal',
+        #'default' => '',    # brilliant_gallery_checklist.qid is type text and may not have a default value
+      ),
+      'state' => array(
+        'description' => t('Visible or invisible.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'size' => 'normal',
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('nid','user',array('qid',255)),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implementation of hook_install().
+ */
+
+function brilliant_gallery_install() {
+  // Create tables.
+  $result = drupal_install_schema('brilliant_gallery');
+}
+
+/*
+CREATE TABLE `db14656_vacil_drupal`.`brilliant_gallery_checklist` (
+`nid` INT unsigned NOT NULL DEFAULT 0, 
+`user` INT unsigned NOT NULL DEFAULT 0, 
+`qid` TEXT NOT NULL, 
+`state` INT unsigned NOT NULL DEFAULT 0, 
+PRIMARY KEY (nid, user, qid(255))
+);
+*/
+
+/**
+* Implementation of hook_uninstall().
+*/
+function brilliant_gallery_uninstall() {
+  // Remove tables.
+  drupal_uninstall_schema('brilliant_gallery');
+}
+
+/**
+ * Implementation(s) of hook_update_N().
+ */
+function brilliant_gallery_update_6001() {
+  $ret = array();
+
+  $schema['brilliant_gallery_checklist'] = array(
+    'description' => t('Table tracing which Brilliant Gallery images are hidden or visible.'),
+    'fields' => array(
+      'nid' => array(
+        'description' => t('Unused now.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'size' => 'normal',
+        'default' => 0,
+      ),
+      'user' => array(
+        'description' => t('User ID.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'size' => 'normal',
+        'default' => 0,
+      ),
+      'qid' => array(
+        'description' => t('Image.'),
+        'type' => 'text',
+        #'unsigned' => FALSE,
+        'not null' => TRUE,
+        'size' => 'normal',
+        #'default' => '',    # brilliant_gallery_checklist.qid is type text and may not have a default value
+      ),
+      'state' => array(
+        'description' => t('Visible or invisible.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'size' => 'normal',
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('nid','user',array('qid',255)),
+  );
+
+  db_create_table($ret, 'brilliant_gallery_checklist', $schema['brilliant_gallery_checklist']); 
+
+  return $ret;
+} 

@@ -1,0 +1,899 @@
+<?php
+/* $Id: brilliant_gallery.module,v 1.49.2.6.2.8.2.7 2009/07/03 16:21:56 tjfulopp Exp $ */
+
+#sess_write('vacilando', 'this is a test');
+
+if (module_exists('views')) {
+  module_load_include('inc', 'brilliant_gallery', 'views');
+  #require(drupal_get_path('module', 'brilliant_gallery') .'/views.inc');
+}
+
+module_load_include('inc', 'brilliant_gallery', 'functions');
+
+// include the brilliant_gallery_checklist .js file in nodes
+drupal_add_js(drupal_get_path('module', 'brilliant_gallery') .'/bgchecklist.js');
+
+/**
+ * Display help and module information
+ *
+ * @param section which section of the site we're displaying help
+ *
+ * @return help text for section
+ */
+function brilliant_gallery_help($path, $arg) {
+
+  $output = '';
+
+  switch ($section) {
+    case "admin/help#brilliant_gallery":
+      $output = '<p>'. t("Highly customizable Drupal module creating a table gallery of quality-scaled images from any number of folders.") .'</p>';
+      break;
+  }
+
+  return $output;
+}
+// function brilliant_gallery_help
+
+/**
+ * Valid permissions for this module
+ *
+ * @return array An array of valid permissions for the onthisdate module
+ */
+function brilliant_gallery_perm() {
+
+  #, 'administer brilliant_gallery'
+  return array('access brilliant_gallery');
+}
+// function brilliant_gallery_perm
+
+/**
+ * Generate HTML for the Brilliant gallery block
+ *
+ * @param op the operation from the URL
+ * @param delta offset
+ *
+ * @returns block HTML
+ */
+function brilliant_gallery_block($op = 'list', $delta = 0) {
+  // listing of blocks, such as on the admin/block page
+  if ($op == "list") {
+    $block[0]["info"] = t("Brilliant gallery");
+    return $block;
+  }
+  else if ($op == 'view') {
+    // our block content
+    // content variable that will be returned for display
+    $block_content = '';
+
+    #$block_content .= l($links->title, 'node/'.$links->nid) . '<br />';
+    #$block_content .= l('vacilando', 'http://www.vacilando.org') . '<br />';
+
+    $block_content .= render_brilliant_gallery();
+
+    // set up the block
+    $block['subject'] = 'Brilliant gallery';
+    $block['content'] = $block_content;
+    return $block;
+  }
+}
+// end brilliant_gallery_block
+function brilliant_gallery_all($switch = '') {
+  // content variable that will be returned for display
+  $page_content = '';
+
+  if ($switch == '') {
+    $page_content .= render_brilliant_gallery();
+  }
+  else if ($switch == 'edit') {
+    $page_content .= render_brilliant_gallery_edit();
+  }
+
+  return $page_content;
+}
+
+
+// function to load the settings of all the checkboxes on this node
+// note that checkboxes that has never been checked will not have an entry in the database
+function brilliant_gallery_checklist_loadall($nid = '') {
+  global $user;
+  $GLOBALS['devel_shutdown'] = FALSE;
+  $uid = $user->uid;
+  $dcvals = array();
+  // any checkbox id that starts with user- we remember the current user's settings
+  // any other id is global and we use user=0
+  $result = db_query("select qid,state from brilliant_gallery_checklist ".
+    " where nid=%d and qid not like 'user-%' and user=0 ".
+    " union ".
+    "select qid,state from brilliant_gallery_checklist ".
+    "where nid=%d and qid like 'user-%' and user=%d ", $nid, $nid, $uid
+  );
+  $count = 0;
+  while ($data = db_fetch_object($result)) {
+    $dcvals[$count] = array(qid => $data->qid, state => $data->state);
+    $count++;
+  }
+  print drupal_to_js($dcvals);
+  exit();
+}
+// function to save/update the state of a checkbox when toggled
+function brilliant_gallery_checklist_save($nid, $qid, $state) {
+  global $user;
+  $GLOBALS['devel_shutdown'] = FALSE;
+  if (preg_match("/^user-/", $qid) == 1) {
+    $uid = $user->uid;
+  }
+  else {
+    $uid = 0;
+  }
+
+  $existing = db_result(db_query("select count(state) from brilliant_gallery_checklist ".
+      "where nid=%d and user=%d and qid='%s'", $nid, $uid, $qid
+    ));
+  if ($existing == 0) {
+    db_query("insert into brilliant_gallery_checklist (nid,user,qid,state) " . "values (%d,%d,'%s',%d)", $nid, $uid, $qid, $state);
+  }
+  elseif ($current != $state) {
+    $current = db_result(db_query("select state from brilliant_gallery_checklist " . " where nid=%d and user=%d and qid='%s'", $nid, $uid, $qid));
+
+    if ($current != $state) {
+      db_query("update brilliant_gallery_checklist " . "set state=%d where nid=%d and user=%d and qid='%s'", $state, $nid, $uid, $qid);
+    }
+  }
+  print drupal_to_js("1");
+  exit();
+}
+
+// helper function for preg_replace_callback to generate the html for each checkbox
+// Form API not used as that would float all the checkboxes to the top/bottom of the page.
+function brilliant_gallery_checklist_docheckbox($matches) {
+  global $brilliant_gallery_checklist_matchcount;
+  $brilliant_gallery_checklist_matchcount++;
+  $name   = check_plain($matches[1]);
+  $label  = filter_xss($matches[2]);
+  $output = <<<OUTPUT
+    <div class="bgchecklist"> <div class="form-item"> <input name="$name" id="$name" value="1" class="form-brilliant_gallery_checklist-checkbox" type="checkbox"> <label class="option"> $label </label> </div></div>
+OUTPUT;
+  return $output;
+}
+
+function brilliant_gallery_admin() {
+  $form['brilliant_gallery_folder'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Path to the main gallery folder'),
+    '#default_value' => variable_get('brilliant_gallery_folder', ''),
+    '#size' => 77,
+    '#maxlength' => 333,
+    '#description' => t("Path to the main folder in which your individual gallery folders will be placed. Such folder must exist under your 'files' folder. Exclude trailing slashes. Example: <i>albums</i>. Leave empty if you wish your 'files' folder to be your album folder."),
+  );
+  $form['brilliant_gallery_pcache'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Path to an image cache folder'),
+    '#default_value' => variable_get('brilliant_gallery_pcache', file_directory_temp()),
+    '#size' => 77,
+    '#maxlength' => 333,
+    '#description' => t("Full server path to the a folder in which resized images and images fetched from Picasa will be temporarily stored. If you are on a dedicated server, this can be your usual temp folder, but if you are on a shared host, it is imperative this path is in your /files directory. Start with a slash but do NOT end with a slash. E.g. /var/www/vhosts/domain.tld/httpdocs/sites/mysite.tld/files/tmp"),
+  );
+  $form['brilliant_gallery_maxcol'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum number of table columns'),
+    '#default_value' => variable_get('brilliant_gallery_maxcol', 5),
+    '#size' => 2,
+    '#maxlength' => 2,
+    '#description' => t("The maximum number of columns displayed in the table."),
+  );
+  $form['brilliant_gallery_maximagewidth'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum width of table images'),
+    '#default_value' => variable_get('brilliant_gallery_maximagewidth', 150),
+    '#size' => 3,
+    '#maxlength' => 4,
+    '#description' => t("The maximum width of thumbnails in the table (height calculated automatically)."),
+  );
+  $form['brilliant_gallery_bcgcolour'] = array(
+    '#type' => 'colorpicker',
+    '#title' => t('Table background colour'),
+    '#default_value' => variable_get('brilliant_gallery_bcgcolour', '#000000'),
+    '#size' => 8,
+    '#maxlength' => 7,
+    '#description' => t("Pick colour of the background of the table that holds the images."),
+  );
+  $form['brilliant_gallery_bcgcolour_textfield'] = array(
+    '#type' => 'colorpicker_textfield',
+    '#title' => t('Current background color'),
+    '#description' => t(''),
+    '#default_value' => variable_get('brilliant_gallery_bcgcolour_textfield', '#000000'),
+    '#colorpicker' => 'brilliant_gallery_bcgcolour',
+  );
+  $form['brilliant_gallery_padding'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Table cell padding'),
+    '#default_value' => variable_get('brilliant_gallery_padding', 3),
+    '#size' => 3,
+    '#maxlength' => 3,
+    '#description' => t("Cell padding (around each image) in pixels."),
+  );
+  $form['brilliant_gallery_overbrowser'] = array(
+    '#type' => 'select',
+    '#title' => t('Overlay browser'),
+    '#required' => FALSE,
+    '#options' => array(
+      'lightbox' => t('Lightbox'),
+      'thickbox' => t('Thickbox'),
+      'greybox' => t('Greybox'),
+      'none' => t('None'),
+    ),
+    '#default_value' => variable_get('brilliant_gallery_overbrowser', 'lightbox'),
+    '#description' => t('Select the overlay image browser (must be installed, of course).'),
+  );
+  $form['brilliant_gallery_maxwidth'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum width of full image'),
+    '#default_value' => variable_get('brilliant_gallery_maxwidth', '1000'),
+    '#size' => 5,
+    '#maxlength' => 5,
+    '#description' => t("Very large images will be scaled down to this width (in pixels) for display before they get displayed by the overlay browser."),
+  );
+  $form['brilliant_gallery_caption'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Display file name as caption'),
+    '#default_value' => variable_get('brilliant_gallery_caption', ''),
+    #'#size' => 5,
+    #'#maxlength' => 5,
+    '#description' => t("Check this if you want the overlay browser to display a caption based on the image file name (dots and underscores are automatically replaced by spaces)."),
+  );
+  $form['brilliant_gallery_sort'] = array(
+    '#type' => 'radios',
+    '#title' => t('Sort or randomize image order'),
+    '#default_value' => variable_get('brilliant_gallery_sort', '1'),
+    '#options' => array('1' => t('Sort images by their file names alphabetically.'),
+      '' => t('The order of your gallery images will always be randomized (on each page load or cache refresh).'),
+    ),
+    #'#description' => t("")
+  );
+  $form['brilliant_gallery_cache'] = array(
+    '#type' => 'radios',
+    '#title' => t('Database or file system caching of images'),
+    '#default_value' => variable_get('brilliant_gallery_cache', 'd'),
+    '#options' => array('d' => t('Use the <i>cache</i> table of Drupal.'),
+      'f' => t('Use the temporary directory you have set in <i>/admin/settings/file-system</i>. Faster than database caching!'),
+    ),
+    '#description' => t("Only images (not the table as such) are cached so that they can be served quicker at subsequent requests."),
+  );
+  return system_settings_form($form);
+}
+
+# Probably not the right way of doing it but it works...
+function brilliant_gallery_perms() {
+  header("HTTP/1.1 301 Moved Permanently");
+  header("Location: /?q=admin/user/permissions#module-brilliant_gallery");
+  exit();
+}
+
+function brilliant_gallery_menu() {
+
+  $items = array();
+
+  $items['admin/settings/brilliant_gallery'] = array(
+    'title' => 'Brilliant gallery',
+    'description' => 'Brilliant gallery module settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('brilliant_gallery_admin'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  # A shortcut to the permissions settings for this module.
+  $items['admin/settings/brilliant_gallery/permissions'] = array(
+    #'path' => 'admin/user/access#module-brilliant_gallery',
+    'title' => 'Configure permissions',
+    'description' => 'Configure access permissions for the Brilliant gallery module',
+    'page callback' => 'brilliant_gallery_perms',
+    #'page arguments' => 'brilliant_gallery_perms',
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['admin/settings/brilliant_gallery/manage'] = array(
+    'title' => 'Manage galleries',
+    'description' => 'Manage galleries displayed using the Brilliant gallery module - e.g. visibility of individual images, etc.',
+    'page callback' => 'render_brilliant_gallery_manage',
+    #'page arguments' => 'brilliant_gallery_perms',
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['brilliant_gallery'] = array(
+    'title' => 'Brilliant gallery',
+    'page callback' => 'brilliant_gallery_all',
+    'access arguments' => array('access brilliant_gallery'),
+    'type' => MENU_CALLBACK,
+  # The type MENU_CALLBACK tells Drupal to not display the link in the user's menu, just use this function when the URL is accessed. Use MENU_NORMAL_ITEM if you want the user to see the link in the side navigation block.
+  );
+  /*
+  $items['brilliant_gallery/manage'] = array(
+    'title' => 'Manage galleries',
+    'page callback' => 'render_brilliant_gallery_manage',
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_CALLBACK
+  ); # The type MENU_CALLBACK tells Drupal to not display the link in the user's menu, just use this function when the URL is accessed. Use MENU_NORMAL_ITEM if you want the user to see the link in the side navigation block.
+*/
+
+  # 2 menu callback functions to implement the ajax load and save routines
+  $items['bgchecklist/loadall'] = array(
+    'page callback' => 'brilliant_gallery_checklist_loadall',
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access brilliant_gallery'),
+  );
+  $items['bgchecklist/save'] = array(
+    'page callback' => 'brilliant_gallery_checklist_save',
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access administration pages'),
+  );
+
+  return $items;
+}
+
+function render_brilliant_gallery_manage() {
+  $result = '';
+  # Beginning of brilliant_gallery_checklist form.
+  # Removed action "/node/$nid"
+  # Hacked $nid ... 9999999 - cannot be empty!!
+  $ac_header = <<<HEADER
+      <form action="" method="post" id="bgchecklist">
+      <div>
+      <div id="nodeid">
+      <input name="nid" id="edit-nid" value="9999999" type="hidden">
+      </div>
+HEADER;
+  $result .= $ac_header;
+  $overbrowser   = variable_get('brilliant_gallery_overbrowser', 'lightbox');
+  $setname       = mt_rand(1, 9999999);
+  $galleryfolder = variable_get('brilliant_gallery_folder', '');
+  $path          = url(file_directory_path() .'/'. $galleryfolder, array('absolute' => TRUE));
+  # url() ads i18n codes to the URL ... we need to remove them here...
+  if ($langcode <> '') {
+    $path = str_replace('/'. $langcode .'/', '/', $path);
+  }
+  # Non-clean URLs need removing ?q=
+  $path = str_replace("?q=", "", $path);
+  $rp = file_directory_path();
+  if ($galleryfolder <> '') {
+    $rp .= '/'. $galleryfolder;
+  }
+  $absolpath = realpath($rp);
+  $result .= '<p>';
+  $result .= '<p>This page allows you to set or unset visibility of each image (data item) in all Brilliant galleries there are on this website.';
+  #$result .= '<p><b>Files folder:</b> ' . file_directory_path() . '/';
+  ob_start();
+  $recurs = bg_iterative_recurse_dir($absolpath);
+  #echo '<pre>'; print_r( $recurs ); echo '</pre>';
+  #echo '<pre>'; print_r( $retval_dimensions ); echo '</pre>';
+  $result .= ob_get_contents();
+  $dirshavefiles = array();
+  foreach ($recurs as $key => $val) {
+    $temp = explode('/', $val);
+    $tempf = $temp[sizeof($temp) - 1];
+    unset($temp[sizeof($temp) - 1]);
+    $tempd = implode('/', $temp);
+    $dirshavefiles[$tempd][] = $tempf;
+  }
+  ksort($dirshavefiles);
+  $result .= '<p><b>Select an image folder:</b><ol>';
+  foreach ($dirshavefiles as $key => $val) {
+    # Get just the folder name in the main gallery folder.
+    if ($galleryfolder == '' and $path_middle == '') {
+      $rootfolder = '/';
+    }
+    else {
+      $rootfolder = '';
+    }
+    $path_middle = str_replace($absolpath, '', $key);
+    $result .= '<li><a href="?fld='. $galleryfolder . $path_middle .'">'. $galleryfolder . $path_middle . $rootfolder .'</a></li>';
+    if ($galleryfolder . $path_middle == $_GET['fld']) {
+      # User has asked to manage images in this folder.
+      $tablerows         = array();
+      $temp              = load_dir_to_array($key, variable_get('brilliant_gallery_maximagewidth', 150), variable_get('brilliant_gallery_maxwidth', '1000'), 1);
+      $retval_dimensions = $temp[0];
+      $imagemaxh         = $temp[1];
+      $maxpoct           = count($retval_dimensions);
+      #echo '<p>max: ' . $maxpoct;
+      #ob_start(); echo '<pre>'; print_r( $retval_dimensions ); echo '</pre>'; $result .= ob_get_contents();
+      # Thanks to Micha³ Albrecht!
+      $retval = array();
+      $cnt = 0;
+      #$path = url($key, array('absolute' => TRUE));
+      for ($poct = 1; $poct <= $maxpoct; $poct++) {
+        $cnt += 1;
+        $retval[$poct - 1] = $retval_dimensions[$poct - 1]['file'];
+        $fullimgpath = $path . $path_middle .'/'. $retval[$poct - 1];
+        if (testext($retval[$poct - 1])) {
+          $caption = str_replace(array('.', '_'), ' ', basename($retval[$poct - 1], strrchr($retval[$poct - 1], '.')));
+          #$smallenough = false;
+          $imgw        = $retval_dimensions[$poct - 1]['imgw'];
+          $imgh        = $retval_dimensions[$poct - 1]['imgh'];
+          $imgwbig     = $retval_dimensions[$poct - 1]['imgwbig'];
+          $imghbig     = $retval_dimensions[$poct - 1]['imghbig'];
+          #@$smallenough = $retval_dimensions[$poct - 1]['smallenough'];
+          #$style_li = "float: left; width: " . $imagewidth . "px; list-style: none; background: " . $bgcolour . "; height: " . $imagemaxh . "px; padding: " . $padding . "px; text-align: center; margin: 0; border: none;"; #$style_li = "float: left; list-style: none; background: #000; width: 44px; height: 33px; padding: 4px; text-align: center; margin: 0; border: none;";
+          #$result .= ('<li style="' . $style_li . '">' . "\n");
+          # Get this module's path:
+          $modulepath = url(drupal_get_path('module', 'brilliant_gallery'), array('absolute' => TRUE));
+          # url() ads i18n codes to the URL ... we need to remove them here...
+          if ($langcode <> '') {
+            $modulepath = str_replace('/'. $langcode .'/', '/', $modulepath);
+          }
+          # Non-clean URLs need removing ?q=
+          $modulepath = str_replace("?q=", "", $modulepath);
+          $displayimage = '';
+          #if ($smallenough === true) {
+          #  $displayimage .= '<br><a href="'. $fullimgpath .'"';
+          #}
+          #else {
+            # Important to begin with the "/" otherwise thumbnails in non-root folders fail. See http://drupal.org/node/175292
+            #&dummy=.jpg
+            $displayimage .= '<a href="'. $modulepath .'/image.php?imgp='. base64_encode($absolpath . $path_middle .'/'. $retval[$poct - 1]) .'&amp;imgw='. $imgwbig .'&amp;imgh='. $imghbig .'"';
+          #}
+
+          switch ($overbrowser) {
+              
+            case 'thickbox':
+              $displayimage .= ' class="thickbox"';
+              $displayimage .= ' rel="img_'. $setname .'"';
+              #$attributes['class'] = $link_class;
+              #$attributes['rel'] = 'img_' . ($node->nid? $node->nid: time()); // 'insert' has no $node->nid
+              break;
+
+            case 'lightbox':
+              $displayimage .= ' rel="lightbox['. $setname .']"';
+              #$attributes['rel'] = 'lightbox[' . ($node->nid? $node->nid: time()) . ']'; // 'insert' has no $node->nid
+              break;
+
+            case 'greybox':
+              $displayimage .= ' class="greybox"';
+              break;
+
+            default:
+              break;
+          }
+
+          if ($showcaption <> '') {
+            if ($showcaption <> 'filename') {
+              $caption = $showcaption;
+            }
+            $displayimage .= ' title="'. $caption .'"';
+          }
+          $displayimage .= '>';
+          # width="' . $imgw . '"
+          $displayimage .= '<img style="border: 0; margin:0px; padding:0px;" alt="" src="'. $modulepath .'/image.php?imgp='. base64_encode($absolpath . $path_middle .'/'. $retval[$poct - 1]) .'&amp;imgw='. $imgw .'&amp;imgh='. $imgh .'" />';
+          $displayimage .= '</a>';
+        }
+        else {
+          $displayimage .= '<a href="'. $fullimgpath .'">';
+          #$result .= '<center>' . $retval[$poct-1] . '</center>';
+          $displayimage .= $retval[$poct - 1];
+          #brokenimage("Error loading PNG");
+          #$result .= '</a>';
+          $displayimage .= '</a>';
+        }
+        #$result .= '<br><font size="-1">'. $retval[$poct-1] . '</font>'; # $fullimgpath
+        $tablerows[$cnt][0] = $displayimage;
+        $tablerows[$cnt][1] = '<font size="-1">'. $retval[$poct - 1] .'</font>';
+        # We need some code for brilliant_gallery_checklist
+        $tmp = '';
+        # E.g. albums/2008/20080321-25_belgicko_zasypane_snehom/dsc02784_w1000.jpg
+        $tmp .= '<div class="bgchecklist"> <div class="form-item"> <input name="' . 'user-'. md5($_GET['fld'] .'/'. $retval[$poct - 1]) .'" id="' . 'user-'. md5($_GET['fld'] .'/'. $retval[$poct - 1]) .'" value="1" class="form-brilliant_gallery_checklist-checkbox" type="checkbox"> <label class="option"> <font color=green>visible</font> </label> </div></div>';
+        $tablerows[$cnt][2] = $tmp;
+      }
+      $header = array('File name', 'Thumbnail', 'Gallery display');
+      $data = array();
+      foreach ($tablerows as $x => $val) {
+        $data[] = array('data' => array($tablerows[$x][0], $tablerows[$x][1], $tablerows[$x][2]));
+      }
+      $result .= theme_table($header, $data);
+      $result .= '<p>';
+    }
+  }
+  $result .= '</ol>';
+  # End of brilliant_gallery_checklist form.
+  $result .= "</div></form>";
+  return $result;
+}
+
+function bg_iterative_recurse_dir($from = '.') {
+  if (!is_dir($from)) {
+    return false;
+  }
+  $files = array();
+  $dirs = array($from);
+  while (NULL !== ($dir = array_pop($dirs))) {
+    if ($dh = opendir($dir)) {
+      while (false !== ($file = readdir($dh))) {
+        if ($file == '.' || $file == '..') {
+          continue;
+        }
+        $path = $dir .'/'. $file;
+        if (is_dir($path)) {
+          $dirs[] = $path;
+        }
+        else $files[] = $path;
+      }
+      closedir($dh);
+    }
+  }
+  return $files;
+}
+
+function render_brilliant_gallery($thisfolder = '', $colcountoverride = '', $widthoverride = '', $sortoverride = '', $maximumnumbertoshow = '', $colouroverride = '', $beginfromoverride = 1, $captionyesnotext = '') {
+  // Is this a Picasa gallery?
+    $picasafolder = false;
+    #echo '....'.substr($thisfolder,0,29);
+    if (substr($thisfolder,0,24) == 'http://picasaweb.google.') {
+      // Must work for all variants - http://picasaweb.google.com, http://picasaweb.google.co.uk, etc.
+      $picasafolder = true;
+    }
+  #drupal_add_css(drupal_get_path('module', 'brilliant_gallery') .'/brilliant_gallery.css');
+  # First some household cleaning. Delete expired cache files at 11:11 (if someone calls this script, of course!)
+  if (date('h') == '11' and date('i') == '11') {
+    #if ( date( 'h' ) == '12' ) {
+    #echo date( 'h' );
+    cleantmpdir();
+  }
+  # Patching a possible problem with i18n
+  $langcode = '';
+  if (function_exists('i18n_get_lang')) {
+    $langcode = i18n_get_lang();
+  }
+  #$result = '</p>';
+  $result = '';
+  $galleryfolder = variable_get('brilliant_gallery_folder', '');
+  if (substr($galleryfolder, strlen($galleryfolder) - 1, 1) == '/' or substr($galleryfolder, 0, 1) == '/') {
+    #watchdog('error', 'failed to notify "weblogs.com" (site)');
+    #form_set_error('yemail', t('Header injection attempt detected.  Do not enter line feed characters into the from field!'));
+    return 'Main gallery folder path must not begin or end with a slash; please fix it in the <a href="/admin/settings/brilliant_gallery">settings page</a>.';
+  }
+/*
+  if ($thisfolder <> '') {
+    $galleryfolder .= '/'. $thisfolder;
+  }
+*/
+  if ( $thisfolder <> '') {
+    if ($galleryfolder <> '') {
+      $galleryfolder .= '/' . $thisfolder;
+    }
+    else{
+    $galleryfolder = $thisfolder;
+    }
+  }
+  if ($colcountoverride == '') {
+    $columns = variable_get('brilliant_gallery_maxcol', 3);
+  }
+  else {
+    $columns = $colcountoverride;
+  }
+  if ($widthoverride == '') {
+    $imagewidth = variable_get('brilliant_gallery_maximagewidth', 150);
+  }
+  else {
+    $imagewidth = $widthoverride;
+  }
+  if ($sortoverride == '' or strtolower($sortoverride) == 'sort') {
+    $brilliant_gallery_sort = variable_get('brilliant_gallery_sort', '1');
+  }
+  else {
+    $brilliant_gallery_sort = $sortoverride;
+  }
+  if ($colouroverride == '') {
+    $bgcolour = variable_get('brilliant_gallery_bcgcolour_textfield', '#000000');
+  }
+  else {
+    $bgcolour = $colouroverride;
+  }
+  #if ($captionyesornot == 'yes' or $captionyesornot == '' or (variable_get('brilliant_gallery_caption', '') <> '' and $captionyesornot <> 'no')) {
+  if (($captionyesnotext == 'yes' or $captionyesnotext == '') and variable_get('brilliant_gallery_caption', '') <> '' ) {
+    $showcaption = 'filename';
+  }
+  #else if ($captionyesornot == 'no') {
+  else if ($captionyesnotext == 'no' or (variable_get('brilliant_gallery_caption', '') == '' and ($captionyesnotext == 'yes' or $captionyesnotext == 'no'))) {
+    $showcaption = '';
+  }
+  else {
+    #$showcaption = $captionyesornot;
+    $showcaption = $captionyesnotext;
+  }
+  $padding = variable_get('brilliant_gallery_padding', 3);
+  $overbrowser = variable_get('brilliant_gallery_overbrowser', 'lightbox');
+  // Totally full resolution display would be impractical, so this is the maximum width of "full" resolution.
+  $fullresolutionmaxwidth = variable_get('brilliant_gallery_maxwidth', '1000');
+  $path = url(file_directory_path() .'/'. $galleryfolder, array('absolute' => TRUE));
+  // url() ads i18n codes to the URL ... we need to remove them here...
+  if ($langcode <> '') {
+    $path = str_replace('/'. $langcode .'/', '/', $path);
+  }
+
+  // Non-clean URLs need removing ?q=
+  $path = str_replace("?q=", "", $path);
+
+  // Get absolute path
+  if ($picasafolder) {
+    $url_to_fetch = $thisfolder;
+    #echo '.--..'.$url_to_fetch;
+    $mgalleryurl = md5($url_to_fetch);
+    $pcachetemp = variable_get('brilliant_gallery_pcache', file_directory_temp());
+    $mkdirek = $pcachetemp . '/bg_picasa_'. $mgalleryurl;
+    if (is_dir($mkdirek)===true) {
+      // If it exists, we assume it is also populated, so we don't create it, and we don't go fetching the remote data!
+      #echo 'exists';
+    }
+    else {
+      #echo 'new';
+      include ('./'. drupal_get_path('module', 'brilliant_gallery') ."/picasa.inc");
+    }
+    $absolpath = $mkdirek;
+    #$absolpath = '/tmp/bg_picasa_838e4e98afdffbec2ed6d34e6bfa497c';
+    #echo $absolpath;
+    #drupal_set_message(t('absol: '.$absolpath));
+  }
+  else {
+    $rp = file_directory_path();
+    if ($galleryfolder <> '') {
+      $rp .= '/'. $galleryfolder;
+    }
+    $absolpath = realpath($rp);
+  }
+  #$result .= $absolpath;
+
+  # Make an array with images in this folder, and their properties.
+  $temp              = load_dir_to_array($absolpath, $imagewidth, $fullresolutionmaxwidth, $brilliant_gallery_sort);
+  $retval_dimensions = $temp[0];
+  $imagemaxh         = $temp[1];
+  $maxpoct           = count($retval_dimensions);
+  if (arg(2) == 'edit') {
+    #print_r( $retval_dimensions );
+  }
+
+  # Get a list of images that are forbidden from display.
+  #$uid=$user->uid;
+  #echo $user->uid;
+  $excludedimgs = array();
+  // any checkbox id that starts with user- we remember the current user's settings
+  // any other id is global and we use user=0
+  /*
+          $result=db_query("select qid,state from brilliant_gallery_checklist ".
+                           " where nid='$nid' and qid not like 'user-%' and user=0 ".
+                           " union ".
+                           "select qid,state from brilliant_gallery_checklist ".
+                           "where nid='$nid' and qid like 'user-%' and user='$uid' ");
+          */
+
+  $dbresult = db_query("select qid from brilliant_gallery_checklist where qid like 'user-%' and state='1' ");
+  while ($data = db_fetch_object($dbresult)) {
+    $excludedimgs[] = $data->qid;
+  }
+  #print_r($excludedimgs);
+
+  # Total 'width' controls the number of thumbnails in each row. The number, in pixels, should be calculated thusly: [maximum width desired for thumbnails] + [padding - if any, x 2] + [margin - if any, x 2] + [border - if any, x 2] x [number of thumbnails desired in each row]
+  $style_ul = "font-size:0; margin:0px; padding:0px; width: ". (($imagewidth + 2 * $padding) * $columns) ."px;";
+  $column_count = 0;
+  #$pocetobr = 0;
+  $setname = mt_rand(1, 9999999);
+  #$result .= '<!-- Brilliant Gallery Table Beginning --><table border="0" rules="none" frame="box" cellpadding="0" cellspacing="0" bgcolor="' . $bgcolour . '"';
+  #$result .= '<!-- Brilliant Gallery Table Beginning -->';
+  #$result .= '<ul class="brilliant_gallery" style="' . $style_ul . '">';
+  $result .= '<ul style="'. $style_ul .'">';
+  #if ( $thisfolder <> '' ) {
+  #$result .= ' align="center"';
+  #   }
+  #$result .= ' style="width:' . $columns*$imagewidth . 'px;">'; #cell-spacing: 5px;
+  #$result .= ' style="width:' . $columns*$imagewidth . 'px;"';
+  #$result .= '>' . "\n"; #cell-spacing: 5px;
+  $maxpoct_show = '';
+  if ($maximumnumbertoshow <> '' and is_numeric($maximumnumbertoshow)) {
+    $maxpoct_show = $maximumnumbertoshow;
+  }
+  # Thanks to Micha³ Albrecht!
+  $retval = array();
+  $cnt = 0;
+  for ($poct = 1; $poct <= $maxpoct; $poct++) {
+    # Skip any images that were excluded from display.
+    # md5() must be made of the main gallery path etc. ending with the file name (unique identifier). E.g. albums/2008/20080321-25_belgicko_zasypane_snehom/dsc02784_w1000.jpg
+    if (array_search('user-'. md5($galleryfolder .'/'. $retval_dimensions[$poct - 1]['file']), $excludedimgs) !== false) {
+      continue;
+    }
+    if ($poct < $beginfromoverride) {
+      continue;
+    # Begin only from $beginfromoverride image.
+    }
+    $cnt += 1;
+    if ($cnt > $maxpoct_show and $maxpoct_show <> '') {
+      continue;
+    # Do not show more than $maxpoct_show (if defined).
+    }
+    $retval[$poct - 1] = $retval_dimensions[$poct - 1]['file'];
+    $fullimgpath = $path .'/'. $retval[$poct - 1];
+    #if ($column_count == 0) { $result .= ('<tr>'); }
+    #$result .= ('<td align="center" bgcolor="' . $bgcolour . '" style="padding: ' . $padding . 'px ' . $padding . 'px ' . $padding . 'px ' . $padding . 'px;vertical-align: middle;">');
+    #$result .= ('<td align="center" bgcolor="' . $bgcolour . '" style="padding: ' . $padding . 'px ' . $padding . 'px ' . $padding . 'px ' . $padding . 'px;vertical-align: middle;">' . "\n");
+    #$pocetobr += 1;
+    if (testext($retval[$poct - 1])) {
+      $caption = str_replace(array('.', '_'), ' ', basename($retval[$poct - 1], strrchr($retval[$poct - 1], '.')));
+      #$smallenough = false;
+      $imgw        = $retval_dimensions[$poct - 1]['imgw'];
+      $imgh        = $retval_dimensions[$poct - 1]['imgh'];
+      $imgwbig     = $retval_dimensions[$poct - 1]['imgwbig'];
+      $imghbig     = $retval_dimensions[$poct - 1]['imghbig'];
+      #@$smallenough = $retval_dimensions[$poct - 1]['smallenough'];
+      #$style_li = "float: left; list-style: none; background: #000; width: 44px; height: 33px; padding: 4px; text-align: center; margin: 0; border: none;";
+      $style_li = "font-size:0; float: left; width: ". $imagewidth ."px; list-style: none; background: ". $bgcolour ."; height: ". $imagemaxh ."px; padding: ". $padding ."px; text-align: center; margin: 0px; border: none;";
+      $result .= ('<li style="'. $style_li .'">' . "\n");
+      # Get this module's path:
+      $modulepath = url(drupal_get_path('module', 'brilliant_gallery'), array('absolute' => TRUE));
+      # url() ads i18n codes to the URL ... we need to remove them here...
+      if ($langcode <> '') {
+        $modulepath = str_replace('/'. $langcode .'/', '/', $modulepath);
+      }
+      # Non-clean URLs need removing ?q=
+      $modulepath = str_replace("?q=", "", $modulepath);
+      #if ($smallenough === true) {
+      #  $result .= '<a href="'. $fullimgpath .'"';
+      #}
+      #else {
+        # Important to begin with the "/" otherwise thumbnails in non-root folders fail. See http://drupal.org/node/175292
+        #$result .= '<a href="' . $modulepath .'/image.php?imgp=' . base64_encode( $absolpath . '/' . $retval[$poct-1] ) . '&amp;imgw=' . $imgwbig . '&amp;imgh=' . $imghbig . '"'; #&dummy=.jpg
+        #&dummy=.jpg
+        $result .= '<a href="'. $modulepath .'/image.php?imgp='. base64_encode($absolpath .'/'. $retval[$poct - 1]) .'&imgw='. $imgwbig .'&imgh='. $imghbig .'"';
+      #}
+
+      switch ($overbrowser) {
+        case 'thickbox':
+          $result .= ' class="thickbox"';
+          $result .= ' rel="img_'. $setname .'"';
+          #$attributes['class'] = $link_class;
+          #$attributes['rel'] = 'img_' . ($node->nid? $node->nid: time()); // 'insert' has no $node->nid
+          break;
+
+        case 'lightbox':
+          $result .= ' rel="lightbox['. $setname .']"';
+          #$attributes['rel'] = 'lightbox[' . ($node->nid? $node->nid: time()) . ']'; // 'insert' has no $node->nid
+          break;
+
+        case 'greybox':
+          $result .= ' class="greybox"';
+          break;
+
+        default:
+          break;
+      }
+
+      if ($showcaption <> '') {
+        if ($showcaption <> 'filename') {
+          $caption = $showcaption;
+        }
+        $result .= ' title="'. $caption .'"';
+      }
+      $result .= '>';
+      # Important to begin with the "/" otherwise thumbnails in non-root folders fail. See http://drupal.org/node/175292
+      /*
+                         $modulepath = url(drupal_get_path('module', 'brilliant_gallery'), array('absolute' => TRUE));
+                         # url() ads i18n codes to the URL ... we need to remove them here...
+                           if ( $langcode <> '' ) {
+                                $modulepath = str_replace( '/' . $langcode . '/', '/', $modulepath );
+                              }
+                         # Non-clean URLs need removing ?q=
+                           $modulepath = str_replace( "?q=", "",  $modulepath );
+*/
+
+      #$result .= '<img style="display: block;border:0" src="' . $modulepath .'/image.php?imgp=' . base64_encode( $absolpath . '/' . $retval[$poct-1] ) . '&imgw=' . $imgw . '&imgh=' . $imgh . '" />'; # width="' . $imgw . '"
+      #$result .= '<img style="border: 0; margin:0px; padding:0px;" alt="" src="' . $modulepath .'/image.php?imgp=' . base64_encode( $absolpath . '/' . $retval[$poct-1] ) . '&amp;imgw=' . $imgw . '&amp;imgh=' . $imgh . '" />'; # width="' . $imgw . '"
+      # width="' . $imgw . '"
+      $result .= '<img style="border: 0; margin:0px; padding:0px;" alt="" src="'. $modulepath .'/image.php?imgp='. base64_encode($absolpath .'/'. $retval[$poct - 1]) .'&imgw='. $imgw .'&imgh='. $imgh .'" />';
+      #$result .= '</a>';
+      $result .= '</a>' . "\n";
+    }
+    else {
+      $fosiz = ceil($imagewidth/13);
+      $style_li = "font-size:". $fosiz ."px; float: left; width: ". $imagewidth ."px; list-style: none; background: ". $bgcolour ."; height: ". $imagemaxh ."px; padding: ". $padding ."px; text-align: center; margin: 0px; border: none;";
+      $result .= ('<li style="'. $style_li .'">' . "\n");
+      $result .= '<a href="'. $fullimgpath .'">';
+      #$result .= '<center>' . $retval[$poct-1] . '</center>';
+      $result .= $retval[$poct - 1];
+      #brokenimage("Error loading PNG");
+      #$result .= '</a>';
+      $result .= '</a>' . "\n";
+    }
+    #$result .= '</td>';
+    $result .= '</li>' . "\n";
+
+    $column_count += 1;
+    #if ($column_count == $columns) { $result .= ("</tr>\n"); $column_count = 0; }
+  }
+  #if ($column_count <> 0) { $result .= ("</tr>"); }
+  #if ($column_count <> 0) { $result .= ("</tr>\n"); }
+  #$result .= "</table>\n";
+  $result .= "</ul>\n";
+  #$result .= '<br style="clear: both;" />';
+  #$result .= '<p>';
+
+  return $result;
+}
+
+# Implementation of hook_filter().
+function brilliant_gallery_filter($op, $delta = 0, $format = -1, $text = '') {
+  switch ($op) {
+    case 'no cache':
+    # See http://drupal.org/node/194318#comment-640952
+      return true;
+
+    case 'list':
+      return array(0 => t('Brilliant Gallery Tag'));
+
+    case 'description':
+      return t('Substitutes a special Brilliant Gallery Tag with the actual gallery table.');
+
+    case 'prepare':
+      return $text;
+
+    case 'process':
+      # process it here........
+      $text = replace_brilliant_gallery_tags($text);
+      return $text;
+  }
+}
+
+function replace_brilliant_gallery_tags($str) {
+  # [bg|path/to/gallery_folder|colcountoverride|widthoverride|sortorrandomoverride|maximumnumbertoshow|colouroverride|beginfromoverride|caption-yes-no-text]
+  # no slashes around this path!
+  $matchlink = '';
+  $orig_match = '';
+  preg_match_all("/(\[)bg(\|).*(\])/", $str, $matches);
+  foreach ($matches[0] as $match) {
+    $omatch = $match;
+    $orig_match[] = $omatch;
+    $match        = substr($match, 1, (strlen($match) - 2));
+    $match        = explode("|", $match);
+
+    // Cache the result if it comes from a non-random tag
+      $mbgtag = md5($omatch);
+      if ($cache = cache_get('bg_gallery_table_'.$mbgtag) && !empty($cache->data) && $match[4] <> 'random') {
+        $galhere = $cache->data;
+      }
+      else {
+        // Do your expensive calculations here, and populate $cargo with the correct stuff..
+        $galhere = render_brilliant_gallery($match[1], $match[2], $match[3], $match[4], $match[5], $match[6], $match[7], $match[8]);
+        cache_set('bg_gallery_table_'.$mbgtag, $galhere, 'cache', time() + $bgcachexpire);
+      }
+
+    $matchlink[] = $galhere;
+
+  }
+  $str = str_replace($orig_match, $matchlink, $str);
+  return $str;
+}
+
+/**
+ * Implementation of hook_filter_tips().
+ *
+ * This hook allows filters to provide help text to users during the content
+ * editing process. Short tips are provided on the content editing screen, while
+ * long tips are provided on a separate linked page. Short tips are optional,
+ * but long tips are highly recommended.
+ */
+/*
+function brilliant_gallery_filter_tips($delta, $format, $long = FALSE) {
+  switch ($delta) {
+    case 0:
+      if ($long) {
+        return t('Every instance of "foo" in the input text will be replaced with "%replacement".', array('%replacement' => variable_get('filter_example_foo_'. $format, 'bar')));
+      }
+      break;
+
+    case 1:
+      if ($long) {
+        return t('Every instance of the special &lt;time /&gt; tag will be replaced with the current date and time in the user\'s specified time zone.');
+      }
+      else {
+        return t('Use &lt;time /&gt; to display the current date/time.');
+      }
+      break;
+  }
+}
+*/

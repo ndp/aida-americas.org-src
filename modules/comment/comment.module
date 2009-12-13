@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.617.2.7 2009/05/13 17:15:10 goba Exp $
+// $Id: comment.module,v 1.617.2.10 2009/09/14 10:36:42 goba Exp $
 
 /**
  * @file
@@ -757,7 +757,7 @@ function comment_save($edit) {
           $edit['timestamp'] = time();
         }
 
-        if ($edit['uid'] === $user->uid) { // '===' because we want to modify anonymous users too
+        if ($edit['uid'] === $user->uid && isset($user->name)) { // '===' Need to modify anonymous users as well.
           $edit['name'] = $user->name;
         }
 
@@ -936,7 +936,7 @@ function comment_render($node, $cid = 0) {
 
     if ($cid && is_numeric($cid)) {
       // Single comment view.
-      $query = 'SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.picture, u.data, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d';
+      $query = 'SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.signature_format, u.picture, u.data, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d';
       $query_args = array($cid);
       if (!user_access('administer comments')) {
         $query .= ' AND c.status = %d';
@@ -957,7 +957,7 @@ function comment_render($node, $cid = 0) {
     else {
       // Multiple comment view
       $query_count = 'SELECT COUNT(*) FROM {comments} c WHERE c.nid = %d';
-      $query = 'SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.picture, u.data, c.thread, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d';
+      $query = 'SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.signature_format, u.picture, u.data, c.thread, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d';
 
       $query_args = array($nid);
       if (!user_access('administer comments')) {
@@ -1384,7 +1384,7 @@ function comment_form(&$form_state, $edit, $title = NULL) {
   $form['cid'] = array('#type' => 'value', '#value' => !empty($edit['cid']) ? $edit['cid'] : NULL);
   $form['pid'] = array('#type' => 'value', '#value' => !empty($edit['pid']) ? $edit['pid'] : NULL);
   $form['nid'] = array('#type' => 'value', '#value' => $edit['nid']);
-  $form['uid'] = array('#type' => 'value', '#value' => !empty($edit['uid']) ? $edit['uid'] : NULL);
+  $form['uid'] = array('#type' => 'value', '#value' => !empty($edit['uid']) ? $edit['uid'] : 0);
 
   // Only show save button if preview is optional or if we are in preview mode.
   // We show the save button in preview mode even if there are form errors so that
@@ -1468,7 +1468,7 @@ function comment_form_add_preview($form, &$form_state) {
   $output = '';
 
   if ($edit['pid']) {
-    $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $edit['pid'], COMMENT_PUBLISHED));
+    $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.signature_format, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $edit['pid'], COMMENT_PUBLISHED));
     $comment = drupal_unpack($comment);
     $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
     $output .= theme('comment_view', $comment, $node);
@@ -1778,22 +1778,22 @@ function theme_comment_thread_expanded($comment, $node) {
 function theme_comment_post_forbidden($node) {
   global $user;
   static $authenticated_post_comments;
-  
+
   if (!$user->uid) {
     if (!isset($authenticated_post_comments)) {
       // We only output any link if we are certain, that users get permission
       // to post comments by logging in. We also locally cache this information.
       $authenticated_post_comments = array_key_exists(DRUPAL_AUTHENTICATED_RID, user_roles(TRUE, 'post comments') + user_roles(TRUE, 'post comments without approval'));
     }
-    
+
     if ($authenticated_post_comments) {
       // We cannot use drupal_get_destination() because these links
       // sometimes appear on /node and taxonomy listing pages.
       if (variable_get('comment_form_location_'. $node->type, COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_SEPARATE_PAGE) {
-        $destination = 'destination='. drupal_urlencode("comment/reply/$node->nid#comment-form");
+        $destination = 'destination='. rawurlencode("comment/reply/$node->nid#comment-form");
       }
       else {
-        $destination = 'destination='. drupal_urlencode("node/$node->nid#comment-form");
+        $destination = 'destination='. rawurlencode("node/$node->nid#comment-form");
       }
 
       if (variable_get('user_register', 1)) {

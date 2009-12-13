@@ -1,5 +1,5 @@
 <?php
-// $Id: term_parent.inc,v 1.2 2009/07/20 16:01:20 merlinofchaos Exp $
+// $Id: term_parent.inc,v 1.2.2.1 2009/10/01 22:00:09 merlinofchaos Exp $
 
 /**
  * @file relationships/term_parent.inc
@@ -10,7 +10,7 @@
  * Implementation of specially named hook_ctools_relationships().
  */
 function ctools_term_parent_ctools_relationships() {
-  $args['term_parent'] = array(
+  return array(
     'title' => t('Term parent'),
     'keyword' => 'parent_term',
     'description' => t('Adds a taxonomy term parent from a term context.'),

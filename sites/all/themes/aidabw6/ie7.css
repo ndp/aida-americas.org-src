@@ -1,0 +1,52 @@
+/* $Id:ie7.css  */
+/*  Created for AIDA by 
+Buttonwillow Six
+www.buttonwillowsix.com 
+based on Beginning  
+by gazwal.com */
+
+/*
+Reference:
+AIDA Blue: #003163
+AIDA Green:#006363
+AIDA Orange:#ce3100
+
+*/
+
+/** floating divs **/
+#content,
+#navbar,
+#sidebar-left,
+#sidebar-right {
+	display: inline; /* display inline or double your floated margin! [1] */
+	overflow: hidden; /* in ie6, overflow auto is broken [2] and so is overflow visible [3] */
+	overflow-y: visible;
+}
+
+
+/* To Fix FCKEditor Weirdness */
+#sidebar-left, #sidebar-right, #content {
+	float: none;
+}
+
+/** Drupal admin tables **/
+#content tr.even th,
+#content tr.even td,
+#content tr.odd th,
+#content tr.odd td {
+	border-bottom: 1px solid #cccccc; /* IE doesn't display borders on table rows */
+}
+
+/* Minor fix for primary and secondary tabs in IE */
+ul.primary li a:hover {
+	color: #555555;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+ul.secondary li a:hover{
+	color: #555555;
+	text-decoration: none;
+	cursor: pointer;
+}
+

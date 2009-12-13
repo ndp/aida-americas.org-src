@@ -1,5 +1,5 @@
 <?php
-// $Id: node.inc,v 1.11 2009/08/17 20:16:36 merlinofchaos Exp $
+// $Id: node.inc,v 1.11.2.2 2009/10/06 18:08:24 merlinofchaos Exp $
 
 /**
  * @file
@@ -12,13 +12,14 @@
  * Implementation of specially named hook_ctools_contexts().
  */
 function ctools_node_ctools_contexts() {
-  $args['node'] = array(
+  return array(
     'title' => t("Node"),
     'description' => t('A node object.'),
     'context' => 'ctools_context_create_node',
     'settings form' => 'ctools_context_node_settings_form',
     'settings form validate' => 'ctools_context_node_settings_form_validate',
     'settings form submit' => 'ctools_context_node_settings_form_submit',
+    'defaults' => array('nid' => ''),
     'keyword' => 'node',
     'context name' => 'node',
     'convert list' => 'ctools_context_node_convert_list',
@@ -28,7 +29,6 @@ function ctools_node_ctools_contexts() {
       '#description' => t('Enter the node ID of a node for this context.'),
     ),
   );
-  return $args;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: views_plugin_argument_validate_taxonomy_term.inc,v 1.4 2009/04/08 05:10:07 merlinofchaos Exp $
+// $Id: views_plugin_argument_validate_taxonomy_term.inc,v 1.6 2009/09/15 16:52:03 merlinofchaos Exp $
 /**
  * @file
  * Contains the 'taxonomy term' argument validator plugin.
@@ -48,7 +48,7 @@ class views_plugin_argument_validate_taxonomy_term extends views_plugin_argument
       '#title' => t('Transform dashes in URL to spaces in term name arguments'),
       '#default_value' => isset($this->argument->options['validate_argument_transform']) ? $this->argument->options['validate_argument_transform'] : FALSE,
       '#process' => array('views_process_dependency'),
-      '#dependency' => array('edit-options-validate-type' => array($this->id)),
+      '#dependency' => array('edit-options-validate-argument-type' => array('convert')),
     );
   }
 
@@ -92,6 +92,9 @@ class views_plugin_argument_validate_taxonomy_term extends views_plugin_argument
           unset($test[$term->tid]);
         }
 
+        // Remove duplicate titles
+        $titles = array_unique($titles);
+
         $this->argument->validated_title = implode($tids->operator == 'or' ? ' + ' : ', ', $titles);
         // If this is not empty, we did not find a tid.
         return empty($test);
@@ -102,9 +105,11 @@ class views_plugin_argument_validate_taxonomy_term extends views_plugin_argument
           $and = " AND td.vid IN(" . implode(', ', $vids) . ')';
         }
         if ($transform) {
-          $argument = str_replace('-', ' ', $argument);
+          $result = db_fetch_object(db_query("SELECT td.* FROM {term_data} td LEFT JOIN {term_synonym} ts ON ts.tid = td.tid WHERE (replace(td.name, ' ', '-') = '%s' OR replace(ts.name, ' ', '-') = '%s')$and", $argument, $argument));
         }
-        $result = db_fetch_object(db_query("SELECT td.* FROM {term_data} td LEFT JOIN {term_synonym} ts ON ts.tid = td.tid WHERE (td.name = '%s' OR ts.name = '%s')$and", $argument, $argument));
+        else {
+          $result = db_fetch_object(db_query("SELECT td.* FROM {term_data} td LEFT JOIN {term_synonym} ts ON ts.tid = td.tid WHERE (td.name = '%s' OR ts.name = '%s')$and", $argument, $argument));
+        }
         if (!$result) {
           return FALSE;
         }
