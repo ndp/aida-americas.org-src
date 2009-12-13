@@ -89,7 +89,7 @@
  *   $db_url = 'mysqli://username:password@localhost/databasename';
  *   $db_url = 'pgsql://username:password@localhost/databasename';
  */
-$db_url = 'mysql://amerigo:LA0r0ya%263@127.0.0.1/amerigo_drupal';
+$db_url = 'mysql://aida_db:LA0r0ya%263@127.0.0.1/amerigo_drupal';
 $db_prefix = '';
 
 /**
