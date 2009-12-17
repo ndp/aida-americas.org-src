@@ -9,3 +9,5 @@ sites/all/.DS_Store
 sites/all/modules/.DS_Store
 .DS_Store
 
+sites/default/settings.php
+*~
