@@ -13,6 +13,17 @@ Options -Indexes
 # Follow symbolic links in this directory.
 Options +FollowSymLinks
 
+
+# BW6 redirects from old site TEST
+RewriteCond %{REQUEST_URI} ^/aida.php?id=laoroya$
+RewriteRule ^.*$ /node/1217? [R=301,L]
+
+# BW6 ADDED TO SOLVE UPDATE PROB
+# Do not pass to drupal if the file or directory exists
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
 # Make Drupal handle any 404 errors.
 ErrorDocument 404 /index.php
 
@@ -21,13 +32,6 @@ ErrorDocument 404 /index.php
   # There is no end quote below, for compatibility with Apache 1.3.
   ErrorDocument 404 "The requested file favicon.ico was not found.
 </Files>
-
-# BW6 ADDED TO SOLVE UPDATE PROB
-# Do not pass to drupal if the file or directory exists
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
-
 
 # Set the default handler.
 DirectoryIndex index.php
