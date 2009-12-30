@@ -29,7 +29,7 @@ ul.tips li {
 **************************************************/
 body {
 	color: #000000;
-	font: normal normal .7em/1.6em Verdana,Arial, Helvetica, sans-serif;
+	font: normal normal .8em/1.6em Verdana,Arial, Helvetica, sans-serif;
 }
 
 h1 {
@@ -54,7 +54,7 @@ h5 {
 	font-size: 0.83em;
 }
 
-h6 {/*This style is now used for the strategic theme descriptions*/
+h6 {/*This style can be used for emphasis*/
 	font-size: 1.6em;
 	font-style: normal;
 	padding-bottom: 25px;
@@ -194,7 +194,7 @@ ul li.leaf a, ul li.expanded a, ul li.collapsed a {
 #block-locale-0 {
 	float: right;
 	padding: 2px;
-	width: 80px;	
+	width: 90px;	
 	/*BW6 Change background to an image?*/
 }
 
@@ -211,17 +211,17 @@ font-weight: bold;
 
 /*English*/
 #block-locale-0 li.first{
-background-color: #fffcea;
+background-color: #EEEEEE;
 padding-left: 10px;
-border: 2px #003163 solid;
+border: 1px #003163 solid;
 margin-bottom: 10px;
 }
 
 /*Spanish*/
 #block-locale-0 li.last{
-background-color: #fffcea;
+background-color: #EEEEEE;
 padding-left: 10px;
-border: 2px #003163 solid;
+border: 1px #003163 solid;
 }
 
 /*Both*/
@@ -233,8 +233,9 @@ color: #ce3100;
 /*     div#breadcrumb-wrapper / div.breadcrumb
 *********************************************************/
 #breadcrumb-wrapper .breadcrumb {
-	margin: .2em 0;
-	font-style: italic;
+/*	margin: .2em 0;
+	font-style: italic;*/
+	display: none;
 }
 
 
@@ -256,12 +257,12 @@ color: #ce3100;
 h2.nodetitle, h1.pagetitle, .field-field-case-location {
 	clear: both; /* h2.nodetitle = node title as links in front page (node.tpl.php) / 
 	h1.pagetitle = node title (page.tpl.php) */
-	font: normal 1.8em Verdana,Arial, Helvetica, sans-serif; /*Georgia, "Times New Roman", Times, serif*/
-	letter-spacing: -1px;
+	font: normal 2em Verdana,Arial, Helvetica, sans-serif; /*Georgia, "Times New Roman", Times, serif*/
+	letter-spacing: 1px;
 	/*max-width: 712px; BW6 so it doesn't bump into stuff */
 	color: #003163;
 	background-color: #FFF;
-	padding-left: 15px;
+	padding-left: -5px;
 }
 
 /*BW6 Might Work for both Case Location across content types */
@@ -536,7 +537,6 @@ Reference:
 AIDA Blue: #003163
 AIDA Green:#006363
 AIDA Orange:#ce3100
-AIDA Light Green (maybe) #99FF66
 
 */
 
@@ -576,7 +576,7 @@ ul.nice-menu-down .menuparent a {
 ul.nice-menu-down li.menuparent,
 /* Repeat for Garland header. */
 #header-region ul.nice-menu-down li.menuparent {
-  background: #fffcea url(images/arrow-down.png) right center no-repeat;
+  background: #EEEEEE url(images/arrow-down.png) right center no-repeat;
 }
 
 ul.nice-menu-down li.menuparent:hover,
@@ -584,13 +584,13 @@ ul.nice-menu-down li.over,
 /* Repeat for Garland header. */
 #header-region ul.nice-menu-down li.menuparent:hover,
 #header-region ul.nice-menu-down li.over {
-  background: #fffcea url(images/arrow-down.png) right center no-repeat;
+  background: #EEEEEE url(images/arrow-down.png) right center no-repeat;
 }
 
 ul.nice-menu-down li li.menuparent,
 /* Repeat for Garland header. */
 #header-region ul.nice-menu-down li li.menuparent {
-  background: #fffcea url(images/arrow-right.png) right center no-repeat;
+  background: #EEEEEE url(images/arrow-right.png) right center no-repeat;
 }
 
 ul.nice-menu-down li li.menuparent:hover,
@@ -598,7 +598,7 @@ ul.nice-menu-down li li.over,
 /* Repeat for Garland header. */
 #header-region ul.nice-menu-down li li.menuparent:hover,
 #header-region ul.nice-menu-down li li.over {
-  background: #fffcea url(images/arrow-right.png) right center no-repeat;
+  background: #EEEEEE url(images/arrow-right.png) right center no-repeat;
 }
 
 /*BW6 Lazy-Man's Search Label Suppression */
@@ -614,7 +614,15 @@ ul.nice-menu-down li li.over,
 	border: #003163 1px solid;
 	text-align: center;
 	font-size: 1.2em;
-	width: 350px;
+	width: 470px;
+}
+
+.field-field-theme-curprojs {
+	width: 470px;
+}
+
+.field-field-theme-pastprojs {
+	width: 470px;
 }
 
 
@@ -628,6 +636,10 @@ ul.nice-menu-down li li.over,
 	font-size: 1.2em;
 	padding: 2px;
 	margin-top: 25px;
+}
+
+.view-header h2 {
+	margin-top: 15px;	
 }
 
 .field-field-refpage-ref .field-item, .field-field-refpage-ref2 .field-item, 

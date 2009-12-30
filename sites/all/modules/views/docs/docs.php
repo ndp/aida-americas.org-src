@@ -1,5 +1,5 @@
 <?php
-// $Id: docs.php,v 1.16 2009/06/17 18:25:02 merlinofchaos Exp $
+// $Id: docs.php,v 1.16.2.1 2009/11/30 23:55:33 merlinofchaos Exp $
 /**
  * @file
  * This file contains no working PHP code; it exists to provide additional documentation
@@ -217,6 +217,14 @@ function hook_views_data() {
  */
 function hook_views_plugins() {
   // example code here
+}
+
+/**
+ * Alter existing plugins data, defined by modules.
+ */
+function hook_views_plugins_alter(&$plugins) {
+  // Add apachesolr to the base of the node row plugin.
+  $plugins['row']['node']['base'][] = 'apachesolr';
 }
 
 /**
@@ -539,6 +547,7 @@ function hook_views_query_substitutions() {
  * before anything is done.
  *
  * Adding output to the view cam be accomplished by placing text on
+
  * $view->attachment_before and $view->attachment_after
  */
 function hook_views_pre_view(&$view, &$display_id, &$args) {
