@@ -1,5 +1,5 @@
 <?php
-// $Id: viewfield.theme.inc,v 1.4 2009/06/15 19:13:02 darrenoh Exp $
+// $Id: viewfield.theme.inc,v 1.6 2009/12/02 23:53:56 darrenoh Exp $
 
 /**
  * @file
@@ -73,10 +73,7 @@ function _viewfield_get_view_args($token_enabled, $vargs, $node) {
       // If the view field is being loaded as a "view field" of "view row",
       // instead of a simple "node field", the node object is not fully populated:
       // we need a full node to perform a correct replacement.
-      $node_values = $node;
-      if ($node->build_mode == 'views') {
-        $node_values = node_load($node->nid);
-      }
+      $node_values = node_load($node->nid);
       $args = token_replace($args, 'node', $node_values);
       $tokens = TRUE;
     }

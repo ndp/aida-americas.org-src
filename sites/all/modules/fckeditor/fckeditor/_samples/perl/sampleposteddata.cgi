@@ -49,8 +49,6 @@ sub GetScriptPath {
 }
 ## END: Hack for IIS
 
-
-
 require '../../fckeditor.pl';
 
 	if($ENV{'REQUEST_METHOD'} eq "POST") {

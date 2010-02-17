@@ -1,6 +1,12 @@
 <?php
-// $Id: image_import.pages.inc,v 1.4 2009/09/02 09:18:16 joachim Exp $
+// $Id: image_import.pages.inc,v 1.7 2009/12/29 23:12:10 joachim Exp $
 
+/**
+ * Verify a candidate file for import.
+ *
+ * @param $file
+ *  A file object to check, of the format returned by file_scan_directory().
+ */
 function image_import_validate_file($file) {
   $errors = array();
   $info = image_get_info($file->filename);
@@ -12,9 +18,19 @@ function image_import_validate_file($file) {
     $errors[] = t('Not a JPG, GIF or PNG file.');
     $file->height = $file->width = 0;
   }
+
+  // Check files are not too large to import.
+  $file->filesize = filesize($file->filename);
+  if ($file->filesize > variable_get('image_max_upload_size', 800) * 1024) {
+    $errors[] = t('File too big.');
+  }
+
   return $errors;
 }
 
+/**
+ * Form generating function for the image import page.
+ */
 function image_import_form() {
   $form = array();
 
@@ -148,18 +164,22 @@ function image_import_form() {
   return $form;
 }
 
+/**
+ * Theme function for the image import form.
+ */
 function theme_image_import_form($form) {
   $output = drupal_render($form['token_help']);
 
   if (!empty($form['file_list']['#value'])) {
     $type = node_get_types('type', $form['#node_type']);
-    $header = array(theme('table_select_header_cell'), t('Name'), t('Size'), t('Dimensions'), check_plain($type->title_label), check_plain($type->body_label));
+    $header = array(theme('table_select_header_cell'), t('Image'), t('Name'), t('Size'), t('Dimensions'), check_plain($type->title_label), check_plain($type->body_label));
     $rows = array();
     foreach (element_children($form['files']['import']) as $key) {
       $filename = $form['files']['import'][$key]['#title'];
       unset($form['files']['import'][$key]['#title']);
       $row = array(
         array('data' => drupal_render($form['files']['import'][$key])),
+        array('data' => '<img width="40" src="' . url($form['#dirpath']  . '/' .  $filename) . '">'),
         array('data' => $filename),
         array('data' => drupal_render($form['files']['filesize'][$key])),
         array('data' => drupal_render($form['files']['dimensions'][$key])),
@@ -179,6 +199,9 @@ function theme_image_import_form($form) {
   return $output . drupal_render($form);
 }
 
+/**
+ * Submit handler for the image import form.
+ */
 function image_import_form_submit($form, &$form_state) {
   $batch = array(
     'title' => t('Importing image'),
@@ -210,6 +233,9 @@ function image_import_form_submit($form, &$form_state) {
   batch_set($batch);
 }
 
+/**
+ * Batch operation callback for image import.
+ */
 function _image_import_batch_op($args, &$context) {
   $error = FALSE;
   // if user choses to reproduce directories structure, save the chosen gallery,
@@ -250,6 +276,9 @@ function _image_import_batch_op($args, &$context) {
   $context['finished'] = 1;
 }
 
+/**
+ * Batch finished callback for image import.
+ */
 function _image_import_batch_finished($success, $results, $operations) {
   if (!$success) {
     if (count($results['bad'])) {
@@ -365,6 +394,9 @@ function _image_import_recursive_delete_empty_directories($basepath, $dir='') {
   return $deleted;
 }
 
+/**
+ * Batch operation callback for deletion of empty directories after the import.
+ */
 function _image_import_recursive_delete_empty_directories_batch_op($args, &$context) {
   $deleted = _image_import_recursive_delete_empty_directories($args['basepath']);
   if (!empty($deleted)) {

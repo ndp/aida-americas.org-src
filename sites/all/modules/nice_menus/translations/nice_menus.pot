@@ -1,4 +1,4 @@
-# $Id: nice_menus.pot,v 1.1.2.1 2008/05/23 02:23:39 seals Exp $
+# $Id: nice_menus.pot,v 1.2 2008/06/12 18:20:12 add1sun Exp $
 #
 # LANGUAGE translation of Drupal (general)
 # Copyright YEAR NAME <EMAIL@ADDRESS>

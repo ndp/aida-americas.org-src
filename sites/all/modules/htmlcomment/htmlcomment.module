@@ -1,0 +1,96 @@
+<?php
+
+// $Id: htmlcomment.module,v 1.1 2009/05/16 18:59:22 tbarregren Exp $
+
+
+/**
+ * @file
+ * HTMLcomment - provides an input format filter that allows HTML comments,
+ * i.e. <!-- ... -->, and an additional filter that allows hiden comment,
+ * i.e. [!-- ... --].
+ *
+ * Author:
+ *   Thomas Barregren <http://drupal.org/user/16678>.
+ *
+ * Sponsor:
+ *   NodeOne <http://nodeone.se>.
+ */
+
+
+/******************************************************************************
+ * HOOKS
+ *****************************************************************************/
+
+/**
+ * Implementation of hook_filter().
+ */
+function htmlcomment_filter($op, $delta = null, $format = null, $text = null) {
+
+  // Return list of filters provided by this module.
+  if ($op === 'list') {
+    return array(
+      0 => t('HTML comments'),
+      1 => t('Private comments'),
+    );
+  }
+
+  // Don't prevent caching.
+  if ($op === 'no cache') {
+    return false;
+  }
+    
+  // Dispatch to handler.
+  $name = _htmlcomment_name($delta);
+  include_once _htmlcomment_include($name);
+  $function = "_htmlcomment_filter_${name}_${op}";
+  if (function_exists($function)) {
+    return $function($text);
+  }
+
+  // If $op is not defined, return $text as it is.
+  return $text;
+
+}
+
+
+/**
+ * Implementation of hook_filter_tips().
+ */
+function htmlcomment_filter_tips($delta, $format, $long = false) {
+
+  $type = $long ? 'long' : 'short';
+
+  // Dispatch to handler.
+  $name = _htmlcomment_name($delta);
+  include_once _htmlcomment_include($name);
+  $function = "_htmlcomment_filter_${name}_${type}_tips";
+  if (function_exists($function)) {
+    return $function();
+  }  
+
+}
+
+
+/******************************************************************************
+ * HELPERS
+ *****************************************************************************/
+
+
+/**
+ * Returns the filters name given its delta.
+ */ 
+function _htmlcomment_name($delta) {
+  static $filters = array(
+    0 => 'html',
+    1 => 'private',
+  ); 
+  return $filters[$delta];
+}
+
+
+/**
+ * Returns path to the filters include file.
+ */ 
+function _htmlcomment_include($name) {
+  return './' . drupal_get_path('module', 'htmlcomment') . "/htmlcomment_$name.inc";
+}

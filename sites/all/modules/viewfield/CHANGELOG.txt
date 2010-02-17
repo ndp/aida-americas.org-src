@@ -1,4 +1,4 @@
-$Id: CHANGELOG.txt,v 1.7 2009/05/24 05:33:35 darrenoh Exp $
+$Id: CHANGELOG.txt,v 1.9 2009/12/02 23:53:55 darrenoh Exp $
 
 Viewfield x.x-x.x, xxxx-xx-xx
 -----------------------------
@@ -26,7 +26,6 @@ by Zoltan Balogh: Added Hungarian translation.
 #399872 by burlap, jerdavis: Fixed views access control.
   Added $view->access() check to view execution and rendering in
   _viewfield_get_view_content().
-
 #416922 by Darren Oh: Fixed lost settings on default views.
 by Darren Oh: Fixed error notice when force default is on.
 by Darren Oh: Reverted previous commit.
@@ -41,9 +40,24 @@ by Darren Oh: Fixed typo in changelog.
 by Darren Oh: Moved theme functions file to theme directory.
 by Darren Oh: Changed install file description.
 by Darren Oh: Fixed update to enable fields.
+by Zoltan Balogh: Updated Hungarian translation.
 #373373 by ramsalt: Fixed page view changing node title.
 #416922 by Darren Oh: Fixed upgrade for existing fields.
 #434920 by Darren Oh: Fixed argument defaults being lost on save.
+by Darren Oh: Fixed user keyword.
+by Darren Oh: Fixed caching error.
+#480432 by Aren Cambre, hadsie, scottrigby, jerdavis: Error when creating new
+  viewfield.
+  Added is_array() check to prevent errors when the field is first being
+  created.
+#480432 by Darren Oh: Improved original fix to prevent error on line 276.
+by Darren Oh: Fixed undefined variable errors.
+#568304 by Darren Oh: Fixed rendering of fieldgroups after fieldgroup containing
+  viewfield.
+  A viewfield in a fieldgroup would prevent subsequent fieldgroups from being
+  rendered if the build mode was not full.
+#568304 by Darren Oh: Fixed missing fieldgroups in full node view after last
+  change.
 
 
 Viewfield 5.x-1.x, 2007-02-05

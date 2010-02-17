@@ -1,22 +1,11 @@
 <?php
-// $Id: site_map.module,v 1.39.2.18 2009/10/14 20:35:28 frjo Exp $
+// $Id: site_map.module,v 1.39.2.17.2.4 2009/12/28 14:32:26 frjo Exp $
 
 /**
  * @file
  * Original author: Nic Ivy
  * Now maintained by by Fredrik Jonsson fredrik at combonet dot se
  */
-
-/**
- * Implementation of hook_help().
- */
-function site_map_help($path, $arg) {
-  switch ($path) {
-    case 'sitemap':
-      $output = _sitemap_get_message();
-      return $output ? '<p>'. $output .'</p>' : '';
-  }
-}
 
 /**
  * Implementation of hook_perm().
@@ -38,6 +27,12 @@ function site_map_theme() {
     ),
     'site_map_feed_icon' => array(
       'arguments' => array('url' => NULL, 'type' => 'node'),
+    ),
+    'site_map_menu_tree' => array(
+      'arguments' => array('tree' => NULL),
+    ),
+    'site_map_menu_item' => array(
+      'arguments' => array('link' => NULL, 'has_children' => NULL, 'menu' => ''),
     ),
   );
 }
@@ -111,6 +106,9 @@ function site_map_page() {
  */
 function theme_site_map_display() {
   $output = '';
+
+  $message = filter_xss_admin(variable_get('site_map_message', ''));
+  $output .= $message ? '<p>'. $message .'</p>' : '';
 
   if ((variable_get('site_map_show_rss_links', 1) != 0) && module_exists('commentrss') && variable_get('commentrss_site', COMMENTRSS_SITE_FRONT_PAGE)) {
     $output .= '<p><span class="rss">'. theme('site_map_feed_icon', NULL) .'</span> '. t('Link to a content RSS feed');
@@ -197,6 +195,38 @@ function theme_site_map_feed_icon($url, $type = 'node') {
   }
 
   return $output;
+}
+
+/**
+ * This is a clone of the core theme_menu_tree() function with the exception of
+ * the site_map specific class name used in the UL that also allow themers to
+ * override the function only for the sitemap page.
+ *
+ * Generate the HTML output for a menu tree
+ *
+ * @ingroup themeable
+ */
+function theme_site_map_menu_tree($tree) {
+  return '<ul class="site-map-menu">'. $tree .'</ul>';
+}
+
+/**
+ * This is a one by one clone of the core theme_menu_item() function that allows
+ * custom theming of the sitemap page items.
+ *
+ * Generate the HTML output for a menu item and submenu.
+ *
+ * @ingroup themeable
+ */
+function theme_site_map_menu_item($link, $has_children, $menu = '', $in_active_trail = FALSE, $extra_class = NULL) {
+  $class = ($menu ? 'expanded' : ($has_children ? 'collapsed' : 'leaf'));
+  if (!empty($extra_class)) {
+    $class .= ' '. $extra_class;
+  }
+  if ($in_active_trail) {
+    $class .= ' active-trail';
+  }
+  return '<li class="'. $class .'">'. $link . $menu ."</li>\n";
 }
 
 function _site_map_front_page() {
@@ -332,7 +362,7 @@ function _site_map_books() {
       $tree = menu_tree_all_data($node->book['menu_name'], $node->book);
       $data = array_shift($tree);
       $output .= theme('book_title_link', $data['link']);
-      $output .= ($data['below']) ? menu_tree_output($data['below']) : '';
+      $output .= ($data['below']) ? _site_map_menu_tree_output($data['below']) : '';
     }
 
     if ($output) {
@@ -347,14 +377,7 @@ function _site_map_books() {
  * Render menus
  */
 function _site_map_menus() {
-  global $language;
-
-  if (module_exists('locale')) {
-    $mids = variable_get('site_map_show_menus_'. $language->language, array());
-  }
-  else {
-    $mids = variable_get('site_map_show_menus', array());
-  }
+  $mids = variable_get('site_map_show_menus', array());
 
   $output = '';
   if ($mids) {
@@ -365,7 +388,7 @@ function _site_map_menus() {
       if (module_exists('i18nmenu')) {
         i18nmenu_localize_tree($tree);
       }
-      $menu_display = menu_tree_output($tree);
+      $menu_display = _site_map_menu_tree_output($tree);
       if (!empty($menu_display)) {
         $title = $menu['title'];
         $output .= theme('site_map_box', $title, $menu_display, 'sitemap-menu');
@@ -440,7 +463,6 @@ function _site_map_taxonomy_tree($vid, $name = NULL, $description = NULL) {
 
   $output .= !empty($description) ? '<div class="taxonomy-term-description">'. filter_xss_admin($description) ."</div>\n" : '';
 
-  $output .= '<div class="tree">';
   // taxonomy_get_tree() honors access controls
   $tree = taxonomy_get_tree($vid);
   foreach ($tree as $term) {
@@ -510,27 +532,50 @@ function _site_map_taxonomy_tree($vid, $name = NULL, $description = NULL) {
       $output .= "</li>\n</ul>\n";
     }
   }
-  $output .= "</div>\n";
   $output = theme('site_map_box', $title, $output, 'sitemap-terms sitemap-terms-'. $vid . $class);
 
   return $output;
 }
 
 /**
- * Get the message which appears above the site map.
- * If the locale module is enabled, an optional language code can be given
+ * This is a clone of the core menu_tree_output() function with the exception
+ * of theme('site_map_menu_tree') for theming override reasons.
+ *
+ * Returns a rendered menu tree.
+ *
+ * @param $tree
+ *   A data structure representing the tree as returned from menu_tree_data.
+ * @return
+ *   The rendered HTML of that data structure.
  */
-function _sitemap_get_message($lang_code = NULL) {
-  if (module_exists('locale')) {
-    if ($lang_code == NULL) {
-      global $language;
-      $lang_code = $language->language;
+function _site_map_menu_tree_output($tree) {
+  $output = '';
+  $items = array();
+
+  // Pull out just the menu items we are going to render so that we
+  // get an accurate count for the first/last classes.
+  foreach ($tree as $data) {
+    if (!$data['link']['hidden']) {
+      $items[] = $data;
     }
-    $message = filter_xss_admin(variable_get("site_map_message_$lang_code", ''));
-  }
-  else {
-    $message = filter_xss_admin(variable_get('site_map_message', ''));
   }
 
-  return $message;
+  $num_items = count($items);
+  foreach ($items as $i => $data) {
+    $extra_class = NULL;
+    if ($i == 0) {
+      $extra_class = 'first';
+    }
+    if ($i == $num_items - 1) {
+      $extra_class = 'last';
+    }
+    $link = theme('menu_item_link', $data['link']);
+    if ($data['below']) {
+      $output .= theme('site_map_menu_item', $link, $data['link']['has_children'], _site_map_menu_tree_output($data['below']), $data['link']['in_active_trail'], $extra_class);
+    }
+    else {
+      $output .= theme('site_map_menu_item', $link, $data['link']['has_children'], '', $data['link']['in_active_trail'], $extra_class);
+    }
+  }
+  return $output ? theme('site_map_menu_tree', $output) : '';
 }

@@ -23,6 +23,18 @@ AIDA Orange:#ce3100
 	overflow-y: visible;
 }
 
+/*To see if I can fix top header space */
+
+#header {
+	height: 120px;
+}
+
+#logo {/*this is the key*/
+	top:-50px;
+	left: 0px;
+	position: absolute;
+}
+
 
 /* To Fix FCKEditor Weirdness */
 #sidebar-left, #sidebar-right, #content {

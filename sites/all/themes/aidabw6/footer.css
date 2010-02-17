@@ -35,14 +35,14 @@ AIDA Orange:#ce3100
 	background: #003163;
 }
 #bottom-primary a{
-color: #fff;
-font-weight: bold;
+/*color: #fff;
+font-weight: bold;*/
+display:none;
 }
 
 /*  footer message  */
 #footer-message {
 	padding: .4em;
-	background-color: #fffcea;
 	text-align: center;
 	font-size: .8em;
 }

@@ -27,19 +27,31 @@
     <div class="linkswrap">
     <?php if ($links) { ?><div class="postlinks"><?php print $links?></div><?php }; ?>
 
-<!-- BW6 Removed this for now. Will likely replace with Block.
+<!-- BW6 to Make Under Construction Graphic Appear on Page when it is Under Construction -->
+<!-- Based on: http://drupal.org/node/460136-->
+<?php
+/**
+* Prints list of the terms (as links) that are
+* associated to the currently displayed node from a specific vocab
+* In this case, vid 9 is the Content Status vocab
+* Styles defined for uc-65 and uc-66 don't display, Style for uc-64 include under construction graphic
+*/
+if ( arg(0) == 'node' && is_numeric(arg(1)) ) {
+    $node = node_load(arg(1));
+    $vid = 9;
+    $terms = taxonomy_node_get_terms_by_vocabulary($node, $vid);
+    if ($terms) {
+                foreach ($terms as $term) {
+                echo '<div class="uc-'. $term->tid.'">';
+				echo $term->name;
+				echo '</div>';
 
-<?php if ($terms) { ?><div class="taxonomy">Tags: <?php print $terms?></div><?php } ?>
+          }
+    }
+}
+?>
+<!-- END BW6 to Make Under Construction Graphic Appear on Page when it is Under Construction -->
 
-
-<?php foreach ((array)$taxonomy as $item) { ?>
-    <?php if ($item->tid == 64): ?>
-        <li>
-       Under Construction
-        </li>
-    <?php endif; ?>
-<?php } ?>
--->
     </div>
   
   </div>

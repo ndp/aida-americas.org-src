@@ -49,7 +49,6 @@ AIDA Light Green (maybe) #6DCE91
 /*     header
 ****************************************/
 #header {
-	background-color: #fff;
 	height: 145px; /* BW6 Using AIDA logo small, which is 145px  */
 /*	padding-bottom: 20px;BW6 Should Keep Menu from Creeping Up Over Logo if Menu in featured! */
 }
