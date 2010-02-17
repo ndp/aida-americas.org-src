@@ -1,5 +1,5 @@
 <?php
-// $Id: site_map.admin.inc,v 1.1.2.7 2009/06/29 19:12:54 frjo Exp $
+// $Id: site_map.admin.inc,v 1.1.2.7.2.2 2009/09/29 05:07:34 frjo Exp $
 
 /**
  * @file
@@ -12,36 +12,15 @@
  */
 function site_map_admin_settings() {
 
-  if (module_exists('locale')) {
-    $langs = locale_language_list();
-  }
-  // Field to set site map message. Nifty language support from the catcha module, thanks.
-  if ($langs) {
-    $form['site_map_message'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Site map message'),
-      '#description' => t('Define a message to be displayed above the site map.'),
-    );
-    foreach ($langs as $lang_code => $lang_name) {
-      $form['site_map_message']["site_map_message_$lang_code"] = array(
-        '#type' => 'textarea',
-        '#title' => t('For language %lang_name (code %lang_code)', array('%lang_name' => $lang_name, '%lang_code' => $lang_code)),
-        '#default_value' => _sitemap_get_message($lang_code),
-        '#cols' => 60,
-        '#rows' => 5,
-      );
-    }
-  }
-  else {
-    $form['site_map_message'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Site map message'),
-      '#default_value' => _sitemap_get_message(),
-      '#cols' => 60,
-      '#rows' => 5,
-      '#description' => t('Define a message to be displayed above the site map.'),
-    );
-  }
+  // Field to set site map message.
+  $form['site_map_message'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Site map message'),
+    '#default_value' => variable_get('site_map_message', ''),
+    '#cols' => 60,
+    '#rows' => 5,
+    '#description' => t('Define a message to be displayed above the site map.'),
+  );
 
   $form['site_map_content'] = array(
     '#type' => 'fieldset',
@@ -66,7 +45,7 @@ function site_map_admin_settings() {
     }
   }
   $form['site_map_content']['site_map_show_books'] = array(
-    '#type' => 'select',
+    '#type' => 'checkboxes',
     '#title' => t('Books to include in the site map'),
     '#default_value' => variable_get('site_map_show_books', array()),
     '#options' => $book_options,
@@ -83,28 +62,14 @@ function site_map_admin_settings() {
   $menu_options = array();
   $menu_options = menu_get_menus();
 
-  if ($langs) {
-    foreach ($langs as $lang_code => $lang_name) {
-      $form['site_map_content']["site_map_show_menus_$lang_code"] = array(
-        '#type' => 'select',
-        '#title' => t('Menus to include in the site map for !lang (code !code)', array('!lang' => $lang_name, '!code' => $lang_code)),
-        '#default_value' => variable_get("site_map_show_menus_$lang_code", array()),
-        '#options' => $menu_options,
-        '#multiple' => TRUE,
-        '#description' => t('Ctrl-click (Windows) or Command-click (Mac) to select more than one value.'),
-      );
-    }
-  }
-  else {
-    $form['site_map_content']['site_map_show_menus'] = array(
-      '#type' => 'select',
-      '#title' => t('Menus to include in the site map'),
-      '#default_value' => variable_get('site_map_show_menus', array()),
-      '#options' => $menu_options,
-      '#multiple' => TRUE,
-      '#description' => t('Ctrl-click (Windows) or Command-click (Mac) to select more than one value.'),
-    );
-  }
+  $form['site_map_content']['site_map_show_menus'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Menus to include in the site map'),
+    '#default_value' => variable_get('site_map_show_menus', array()),
+    '#options' => $menu_options,
+    '#multiple' => TRUE,
+    '#description' => t('Ctrl-click (Windows) or Command-click (Mac) to select more than one value.'),
+  );
   $form['site_map_content']['site_map_show_faq'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show FAQ content'),
@@ -118,18 +83,12 @@ function site_map_admin_settings() {
     }
   }
   $form['site_map_content']['site_map_show_vocabularies'] = array(
-    '#type' => 'select',
+    '#type' => 'checkboxes',
     '#title' => t('Categories to include in the site map'),
     '#default_value' => variable_get('site_map_show_vocabularies', array()),
     '#options' => $vocab_options,
     '#multiple' => TRUE,
     '#description' => t('Ctrl-click (Windows) or Command-click (Mac) to select more than one value.'),
-  );
-  $form['site_map_content']['site_map_css'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Do not include site map CSS file'),
-    '#default_value' => variable_get('site_map_css', 0),
-    '#description' => t('If you don\'t want to load the included CSS file you can check this box.'),
   );
 
   $form['site_map_taxonomy_options'] = array(
@@ -190,6 +149,24 @@ function site_map_admin_settings() {
     '#maxlength' => 10,
     '#description' => t('Specify how many subcategories should be included in the RSS feed. Enter "all" to include all subcategories or "0" to include no subcategories.'),
   );
+
+  $form['site_map_css_options'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('CSS settings'),
+  );
+  $form['site_map_css_options']['site_map_css'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Do not include site map CSS file'),
+    '#default_value' => variable_get('site_map_css', 0),
+    '#description' => t('If you don\'t want to load the included CSS file you can check this box.'),
+  );
+
+  // Make use of the Checkall module if it's installed.
+  if (module_exists('checkall')) {
+    $form['site_map_content']['site_map_show_books']['#checkall'] = TRUE;
+    $form['site_map_content']['site_map_show_menus']['#checkall'] = TRUE;
+    $form['site_map_content']['site_map_show_vocabularies']['#checkall'] = TRUE;
+  }
 
   return system_settings_form($form);
 }

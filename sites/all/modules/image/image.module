@@ -1,5 +1,5 @@
 <?php
-// $Id: image.module,v 1.321 2009/09/09 19:06:00 joachim Exp $
+// $Id: image.module,v 1.322 2009/09/13 20:21:04 joachim Exp $
 
 define('IMAGE_ORIGINAL', '_original');
 define('IMAGE_PREVIEW', 'preview');
@@ -477,7 +477,7 @@ function image_load(&$node) {
     return;
   }
   
-  if ((arg(0) != 'batch') || (strpos($_GET['q'], 'admin/content/node') === FALSE)) {
+  if ((arg(0) != 'batch') && (strpos($_GET['q'], 'admin/content/node') === FALSE)) {
     _image_build_derivatives_if_needed($node);
   }
 }

@@ -27,6 +27,22 @@ function phptemplate_preprocess_page(&$vars) {
 	
   $vars['site_title_html'] = implode(' ', $site_fields);
 
+
+//BW6 Make template suggestions for pages to look for template files, for example
+//page-faq.tpl.php
+//used for custom project pages at the moment
+
+  if (module_exists('path')) {
+    $alias = drupal_get_path_alias(str_replace('/edit','',$_GET['q']));
+    if ($alias != $_GET['q']) {
+      $template_filename = 'page';
+      foreach (explode('/', $alias) as $path_part) {
+        $template_filename = $template_filename . '-' . $path_part;
+        $vars['template_files'][] = $template_filename;
+      }
+    }
+  }
+
 //Not implemented Now
 //Get class for under construction page based on taxonomy term
 //http://adaptivethemes.com/give-your-nodes-some-class
@@ -48,9 +64,6 @@ function phptemplate_preprocess_page(&$vars) {
 
 
 }
-
-
-
 
 /**
  * Allow themable wrapping of all comments (from garland).

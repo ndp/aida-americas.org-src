@@ -26,7 +26,6 @@ by Zoltan Balogh: Added Hungarian translation.
 #399872 by burlap, jerdavis: Fixed views access control.
   Added $view->access() check to view execution and rendering in
   _viewfield_get_view_content().
-
 #416922 by Darren Oh: Fixed lost settings on default views.
 by Darren Oh: Fixed error notice when force default is on.
 by Darren Oh: Reverted previous commit.

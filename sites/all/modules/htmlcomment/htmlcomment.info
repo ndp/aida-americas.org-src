@@ -1,0 +1,12 @@
+; $Id: htmlcomment.info,v 1.1 2009/05/16 18:59:22 tbarregren Exp $
+name = "HTML Comment"
+description = "Provides input format filters that allows HTML comments, i.e. &lt;!-- … --&gt; and private comments, i.e. [!-- … --]."
+core = 6.x
+
+
+; Information added by drupal.org packaging script on 2009-05-16
+version = "6.x-1.0"
+core = "6.x"
+project = "htmlcomment"
+datestamp = "1242501932"
+
