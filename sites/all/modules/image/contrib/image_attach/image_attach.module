@@ -1,5 +1,5 @@
 <?php
-// $Id: image_attach.module,v 1.66 2009/09/08 13:14:49 joachim Exp $
+// $Id: image_attach.module,v 1.75 2010/01/16 11:34:42 joachim Exp $
 
 /**
  * @file image_attach.module
@@ -122,11 +122,12 @@ function image_attach_block($op = 'list', $delta = 0, $edit = array()) {
 }
 
 /**
- * implementation of hook_form_alter()
+ * Implementation of hook_form_FORM_ID_alter().
+ *
+ * Add settings to the content type settings form.
  */
-function image_attach_form_alter(&$form, $form_state, $form_id) {
-  // Content type settings form.
-  if ($form_id == 'node_type_form' && $form['#node_type']->type != 'image') {
+function image_attach_form_node_type_form_alter(&$form, $form_state) {
+  if($form['#node_type']->type != 'image') {
     _image_check_settings();
 
     $image_sizes = array(IMAGE_ATTACH_HIDDEN => t('<Hidden>'));
@@ -146,6 +147,13 @@ function image_attach_form_alter(&$form, $form_state, $form_id) {
       '#default_value' => variable_get('image_attach_'. $form['#node_type']->type, 0),
       '#options' => array(0 => t('Disabled'), 1 => t('Enabled')),
       '#description' => t('Should this node allows users to upload an image?'),
+    );
+    $form['image_attach']['image_attach_maximum'] = array(
+      '#type' => 'select',
+      '#title' => t('Maximum number of images'),
+      '#default_value' => variable_get('image_attach_maximum_' . $form['#node_type']->type, 0),
+      '#options' => array(0 => t('Unlimited')) + drupal_map_assoc(range(1, 10)),
+      '#description' => t('The maximum number of images that may be attached to nodes of this type.'),
     );
     $form['image_attach']['image_attach_size_teaser'] = array(
       '#type' => 'select',
@@ -181,10 +189,16 @@ function image_attach_form_alter(&$form, $form_state, $form_id) {
     if (module_exists('content')) {
       $link = l(t('Manage fields'), $_GET['q'] .'/fields');
       $form['image_attach']['#description'] = t('Since you installed CCK module, you can change the image weight in the !link page.', array('!link' => $link));
-    }
+    } 
   }
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function image_attach_form_alter(&$form, $form_state, $form_id) {
   // Node edit form.
-  else if (isset($form['type']['#value']) && $form['type']['#value'] != 'image') {
+  if (isset($form['type']['#value']) && $form['type']['#value'] != 'image') {
     $type = $form['type']['#value'];
     // If enabled adjust the form.
     if ($form_id == $type .'_node_form' && variable_get('image_attach_'. $type, 0)) {
@@ -194,10 +208,19 @@ function image_attach_form_alter(&$form, $form_state, $form_id) {
       $form['#attributes'] = array("enctype" => "multipart/form-data");
       // Add a custom submit handler so we can handle image creation on-the-fly
       $form['#validate'][] = 'image_attach_validate'; 
+      // Add a custom submit handler so we can clean up the selection box items.
+      $form['#submit'][] = 'image_attach_node_form_submit'; 
+      
+      // Check permissions and settings
+      $may_attach           = user_access('attach images');
+      $may_attach_existing  = variable_get('image_attach_existing', 1);
+      $may_upload           = user_access('create images');
+      $has_existing_images  = !empty($node->iids);
+      $maximum_images       = variable_get('image_attach_maximum_' . $type, 0);
 
       // Display the image attach form only if user can attach images, AND
       // it is allowed to attach existing images or the user is allowed to create new images 
-      if (user_access('attach images') && (variable_get('image_attach_existing', 1) || user_access('create images'))) {
+      if ($may_attach && ($may_attach_existing || $may_upload)) {
         $form['image_attach'] = array(
           '#type' => 'fieldset',
           '#title' => t('Attached images'),
@@ -205,40 +228,57 @@ function image_attach_form_alter(&$form, $form_state, $form_id) {
           '#collapsed' => empty($node->iids),
         );
 
-        if (!empty($node->iids)) {
+        if ($maximum_images) {
+          $form['image_attach']['#description'] = format_plural(
+            $maximum_images,
+            'You may attach 1 image.',
+            'You may attach up to @count images.'
+          );
+        }
+
+        if ($has_existing_images) {
           foreach ($node->iids as $iid) {
             $image = node_load($iid);
             $form['image_attach']['image_thumbnail'][$iid] = array(
               '#type' => 'item',
               '#title' => t('Thumbnail'),
-              '#value' => image_display($image, 'thumbnail')
+              '#value' => image_display($image, 'thumbnail'),
             );
           }
         }
-
-        $form['image_attach']['iids'] = array(
-          '#type' => 'select',
-          $value => empty($node->iids) ? NULL : $node->iids,
-          '#multiple' => TRUE,
-          '#size' => 6,
-          // Title, options and description are set just below.
-        );
-
-        // User may attach already existing images: show a selection box containing all images.
-        if (variable_get('image_attach_existing', 1)) {
-          $form['image_attach']['iids']['#title'] = t('Existing images');
-          $form['image_attach']['iids']['#options'] = _image_attach_get_image_nodes();
-          $form['image_attach']['iids']['#description'] = t('Choose an image already existing on the server if you do not upload a new one.');
-        }
-        // User may only upload new images: show a selection box containing only attached images.
-        else {
-          $form['image_attach']['iids']['#title'] = t('Attached images');
-          $form['image_attach']['iids']['#options'] = _image_attach_get_image_nodes($node->iids);
-          $form['image_attach']['iids']['#description'] = t('You can remove a previously attached image by unselecting it.');
+        
+        // Only show selection box of image nodes if the user may attach some,
+        // or if there are existings ones that may be removed.
+        if ($may_attach_existing || $has_existing_images) {
+          $form['image_attach']['iids'] = array(
+            '#type' => 'select',
+            $value => empty($node->iids) ? NULL : $node->iids,
+            '#multiple' => TRUE,
+            '#size' => 6,
+            // Title, options and description are set just below.
+          );
+  
+          // User may attach already existing images: show a selection box containing all images.
+          if ($may_attach_existing) {
+            $form['image_attach']['iids']['#title'] = t('Existing images');
+            $form['image_attach']['iids']['#options'] = _image_attach_get_image_nodes();
+            if ($may_upload) {
+              $form['image_attach']['iids']['#description'] = t('Choose existing images if you do not upload a new one.');
+            }
+            else {
+              $form['image_attach']['iids']['#description'] = t('Choose existing images to attach.');
+            }
+          }
+          // User may only upload new images: show a selection box containing only attached images.
+          else {
+              $form['image_attach']['iids']['#title'] = t('Attached images');
+              $form['image_attach']['iids']['#options'] = _image_attach_get_image_nodes($node->iids);
+              $form['image_attach']['iids']['#description'] = t('You can remove a previously attached image by unselecting it.');
+          }
         }
 
         // User may create images, add upload form elements.
-        if (user_access('create images')) {
+        if ($may_upload) {
           $form['image_attach']['image'] = array(
             '#type' => 'file',
             '#title' => t('Upload image')
@@ -247,7 +287,7 @@ function image_attach_form_alter(&$form, $form_state, $form_id) {
             '#type' => 'textfield',
             '#title' => t('Image title'),
             $value => '',
-            '#description' => t('The title the image will be shown with.')
+            '#description' => t('The title the image will be shown with. Leave blank to use the filename.')
           );
           // Provide an additional submit button, which adds an image and redirects
           // the user to the node edit form.
@@ -294,31 +334,72 @@ function image_attach_image_add_submit(&$form, &$form_state) {
 }
 
 /**
+ * Image attach validation handler for node edit form.
+ *
+ * Check that the number of images has not exceeded the maximum.
  * Capture node form submission and immediately create an image if one has been
  * uploaded.
  * Note that the new image nodes are created even on preview. Taking several
  * attempts may create trash.
  */
 function image_attach_validate(&$form, &$form_state) {
-  $validators = array(
-    'file_validate_is_image' => array(),
-  );
-  if ($file = file_save_upload('image', $validators)) {
-    $image_title = $_POST['image_title'] ? $_POST['image_title'] : basename($file->filepath);
-    // Initialize an image properly.
-    $image = image_create_node_from($file->filepath, $image_title, '');
-    if ($image && !form_get_errors()) {
-      drupal_set_message(t("Created new image to attach to this node. !image_link", array('!image_link' => l($image_title, 'node/'. $image->nid) )));
-      // Append image nid to array of images.
-      $form_state['values']['iids'][$image->nid] = $image->nid;
+  // Validate the number of attached images. Filter out the 'None' with array_filter.
+  if ($maximum_images = variable_get('image_attach_maximum_' . $form['#node']->type, 0)) {
+    $uploading_new_image = ($form_state['clicked_button']['#value'] == t('Attach'));
+    $num_images = count(array_filter($form_state['values']['iids']));
+    
+    $node_type_label = node_get_types('name', $form['#node']->type);
+    if ($num_images >= $maximum_images && $uploading_new_image) {
+      // This error will be set when attempting to upload a new image. 
+      // The number already selected may be equal to the maximum, in which case 
+      // the error is just to alert the user that their upload has not been performed, and allow
+      // them to unselect an image and proceed to upload the new one.
+      form_set_error('iids', t('You have selected @count_images but the maximum for a %type is @maximum. The new image has not been uploaded.', array(
+        '@count_images' => format_plural($num_images, '1 image', '@count images'), 
+        '@maximum'      => $maximum_images, 
+        '%type'         => $node_type_label,
+      )));
+    }
+    elseif ($num_images > $maximum_images) {
+      form_set_error('iids', t('You have selected @count_images but the maximum for a %type is @maximum.', array(
+        '@count_images' => format_plural($num_images, '1 image', '@count images'), 
+        '@maximum'      => $maximum_images, 
+        '%type'         => $node_type_label,
+      )));
     }
   }
-  else {
-    // Only raise error if user clicked specific Attach button.
-    if ($form_state['clicked_button']['#value'] == 'Attach') {
-      form_set_error('image_attach', t('Invalid or missing image file for upload and attach.'));
+
+  // Validate and save the uploaded image, providing that there are no errors set.
+  if (!count(form_get_errors())) {
+    $validators = array(
+      'file_validate_is_image' => array(),
+    );
+    if ($file = file_save_upload('image', $validators)) {
+      $image_title = $_POST['image_title'] ? $_POST['image_title'] : basename($file->filepath);
+      // Initialize an image properly.
+      $image = image_create_node_from($file->filepath, $image_title, '');
+      if ($image && !form_get_errors()) {
+        drupal_set_message(t("Created new image to attach to this node. !image_link", array('!image_link' => l($image_title, 'node/'. $image->nid) )));
+        // Append image nid to array of images.
+        $form_state['values']['iids'][$image->nid] = $image->nid;
+      }
+    }
+    else {
+      // Only raise error if user clicked specific Attach button.
+      if ($form_state['clicked_button']['#value'] == t('Attach')) {
+        form_set_error('image_attach', t('Invalid or missing image file for upload and attach.'));
+      }
     }
   }
+}
+
+/**
+ * Extra submit handler for node forms.
+ */
+function image_attach_node_form_submit(&$form, &$form_state) {
+  // Clear the 0 key in the iids array that arises from selecting the 'None' 
+  // option. We do this here so image_attach_nodeapi() gets clean data.
+  unset($form_state['values']['iids'][0]);
 }
 
 /**
@@ -339,8 +420,6 @@ function image_attach_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'insert':
     case 'update':
-      // Unsetting the "- None -" entry from the form select entries
-      unset($node->iids[0]);
       db_query("DELETE FROM {image_attach} WHERE nid = %d", $node->nid);
       if (!empty($node->iids)) {
         // Populate weight column with placeholder values.
@@ -382,7 +461,10 @@ function image_attach_nodeapi(&$node, $op, $teaser, $page) {
         }        
         $node->content['image_attach'] = array('#weight' => $weight);
         if ($teaser_or_body == 'teaser') {
-          $node->content['image_attach'][$node->iids[0]]['#value'] = theme("image_attach_{$teaser_or_body}", $node, $node->iids[0]);
+          // Reliably get the first element: this array is keyed by id rather 
+          // than from 0 when we are showing a node preview.
+          $first_iid = reset($node->iids);
+          $node->content['image_attach'][$first_iid]['#value'] = theme("image_attach_{$teaser_or_body}", $node, $first_iid);
         }
         else {
           $content = '';
@@ -542,7 +624,7 @@ function theme_image_attach_block_attached($nid, $image_nodes = array()) {
     foreach ($image_nodes as $image) {
       // Render each image from the node.
       $img = image_display($image, variable_get('image_attach_block_0_size', IMAGE_THUMBNAIL));
-      $content .= '<div class="attached-image">' .l($img, "node/$iid", array('html' => TRUE)). '</div>';
+      $content .= '<div class="attached-image">' .l($img, 'node/' . $image->nid, array('html' => TRUE)). '</div>';
     }
     return '<div class="all-attached-images">' .$content. '</div>';
   }

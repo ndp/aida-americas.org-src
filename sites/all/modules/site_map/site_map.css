@@ -1,4 +1,4 @@
-/* $Id: site_map.css,v 1.3.2.3 2009/07/02 07:59:59 frjo Exp $  */
+/* $Id: site_map.css,v 1.3.2.3.2.1 2009/12/07 09:34:34 frjo Exp $  */
 
 .sitemap-box {
   margin-bottom: 1em;
@@ -12,7 +12,7 @@
   padding-left: 1.5em;
 }
 
-#site-map .tree ul {
+#site-map .sitemap-terms ul {
   padding-left: 1.5em;
 }
 
@@ -27,6 +27,6 @@
   margin: 0;
   padding: 0;
 }
-#site-map .sitemap-rss-left .tree ul li li {
+#site-map .sitemap-rss-left .sitemap-terms ul li li {
   padding-left: 1.5em;
 }

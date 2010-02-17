@@ -44,8 +44,6 @@ class FCKeditorConnector(	FCKeditorConnectorBase,
 		"Main function. Process the request, set headers and return a string as response."
 		s = ""
 		# Check if this connector is disabled
-
-
 		if not(Config.Enabled):
 			return self.sendError(1, "This connector is disabled.  Please check the connector configurations in \"editor/filemanager/connectors/py/config.py\" and try again.")
 		# Make sure we have valid inputs

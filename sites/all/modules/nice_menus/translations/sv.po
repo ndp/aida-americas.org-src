@@ -1,4 +1,4 @@
-# $Id: sv.po,v 1.1.2.1 2008/05/23 02:23:39 seals Exp $
+# $Id: sv.po,v 1.2 2008/06/12 18:20:12 add1sun Exp $
 #
 # Swedish translation of Drupal (nice_menus)
 # Copyright 2008 Magnus Gunnarsson <seals@passagen.se>

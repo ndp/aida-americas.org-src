@@ -1,5 +1,5 @@
 <?php
-// $Id: image.admin.inc,v 1.8 2009/09/02 12:57:48 joachim Exp $
+// $Id: image.admin.inc,v 1.9 2009/10/13 08:38:52 joachim Exp $
 
 /**
  * Menu callback; Form builder function for image settings.
@@ -184,7 +184,7 @@ function image_admin_settings_submit($form, &$form_state) {
   }
 }
 
-function theme_image_settings_sizes_form(&$form) {
+function theme_image_settings_sizes_form($form) {
   $header = array(t('Label'), t('Operation'), t('Width'), t('Height'), t('Link'));
   foreach (element_children($form) as $key) {
     $row = array();

@@ -547,7 +547,6 @@ function hook_views_query_substitutions() {
  * before anything is done.
  *
  * Adding output to the view cam be accomplished by placing text on
-
  * $view->attachment_before and $view->attachment_after
  */
 function hook_views_pre_view(&$view, &$display_id, &$args) {

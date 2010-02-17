@@ -144,7 +144,6 @@ CharacterCursor.prototype =
 		this._textNode = curNode ;
 		this._offset = curNode && curNode.length - 1 ;
 		return crossed ;
-
 	},
 
 	Clone : function()
@@ -251,8 +250,6 @@ CharacterRange.prototype =
 	{
 		return this._cursors ;
 	}
-
-
 } ;
 
 CharacterRange.CreateFromDomRange = function( domRange )

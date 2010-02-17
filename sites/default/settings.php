@@ -89,7 +89,7 @@
  *   $db_url = 'mysqli://username:password@localhost/databasename';
  *   $db_url = 'pgsql://username:password@localhost/databasename';
  */
-$db_url = 'mysql://aida_db:LA0r0ya%263@127.0.0.1/amerigo_drupal';
+$db_url = 'mysql://amerigo:LA0r0ya%263@127.0.0.1/amerigo_drupal';
 $db_prefix = '';
 
 /**
@@ -122,7 +122,7 @@ $update_free_access = FALSE;
  * It is not allowed to have a trailing slash; Drupal will add it
  * for you.
  */
-# $base_url = 'http://www.example.com';  // NO trailing slash!
+$base_url = 'http://www.aida-americas.org';  // NO trailing slash!
 
 /**
  * PHP settings:
@@ -173,7 +173,7 @@ ini_set('display_errors', 1);
  * Remove the leading hash signs to enable.
  */
 $conf = array(
-   'site_name' => 'Aida Americas',
+   'site_name' => 'AIDA Americas',
  #  'theme_default' => 'minnelli',
  #  'anonymous' => 'Visitor',
 /**
@@ -228,3 +228,17 @@ $conf = array(
 #   'forum'      => 'Discussion board',
 #   '@count min' => '@count minutes',
 # );
+
+/**
+ * Multilingual settings
+ * 
+ * This is a collection of variables that can be set up for each language when i18n enabled.
+ * These are the basic ones for Drupal core, but you can add your own here.
+ * For more information on why BW6 Did this, check here: http://drupal.org/node/134002
+ */
+$conf['i18n_variables'] = array(
+  'site_name',
+  'site_slogan',
+  'site_mission',
+  'site_footer',
+);

@@ -55,7 +55,6 @@
 </div>
 
 <div class="dashboard-right">
-
   <h3 class="dashboard-title"><?php print t('Manage pages') . '...'; ?></h3>
   <div class="dashboard-pages">
     <?php print $pages; ?>

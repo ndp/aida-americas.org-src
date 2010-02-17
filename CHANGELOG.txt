@@ -674,7 +674,6 @@ Drupal 4.5.0, 2004-10-18
     * Added 'categories' block.
 - Blogger API:
     * Added support for auto-discovery of blogger API via RSD.
-
 - Performance:
     * Added support for sending gzip compressed pages.
     * Improved performance of the forum module.
@@ -959,7 +958,6 @@ Drupal 2.0.0, 2001-03-15
     * Modules can be extended with a "comment system": modules can embed the existing comment system without having to write their own, duplicate comment system.
 - Added sections and section manager:
     * Story sections can be maintained from the administration pages.
-
     * Story sections make the open submission more adaptive in that you can set individual post, dump and expiration thresholds for each section according to the story type and urgency level: stories in certain sections do not "expire" and might stay interesting and active as time passes by, whereas news-related stories are only considered "hot" over a short period of time.
 - Multiple vhosts + multiple directories:
     * You can set up multiple Drupal sites on top of the same physical source tree either by using vhosts or sub-directories.
